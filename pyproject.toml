@@ -1,0 +1,133 @@
+[build-system]
+requires = ["setuptools==75.3.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project]
+name = "retejo"
+description = "Modern python http client"
+version = "0.0.1a1"
+readme = "README.md"
+authors = [
+    { name = "Ivan Kirpichnikov", email = "mmssvvvv570@gmail.com" }
+]
+license = { text = "MIT" }
+requires-python = ">=3.12"
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development",
+    "Topic :: System :: Networking",
+    "Topic :: System :: Distributed Computing",
+    "Typing :: Typed",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "Environment :: Web Environment",
+    "Framework :: AsyncIO",
+]
+dependencies = [
+    "adaptix==3.0.0b11",
+]
+
+[project.optional-dependencies]
+requests = [
+    "requests==2.32.4"
+]
+types = [
+    "types-requests==2.32.4.20250611"
+]
+lint = [
+    "mypy==1.16.0",
+    "ruff==0.11.13",
+]
+dev = [
+    "retejo[lint, types, requests]",
+]
+
+[tool.mypy]
+files = ["src"]
+strict = true
+python_version = "3.12"
+enable_error_code = "explicit-override"
+sqlite_cache = true
+
+[tool.ruff]
+include = [
+    "src/retejo/**/*.py",
+    "pyproject.toml"
+]
+fix = true
+line-length = 99
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E",     # pycodestyle errors     https://docs.astral.sh/ruff/rules/#error-e
+    "W",     # pycodestyle warnings   https://docs.astral.sh/ruff/rules/#warning-w
+    "C90",   # mccabe                 https://docs.astral.sh/ruff/rules/#mccabe-c90
+    "N",     # pep8-naming            https://docs.astral.sh/ruff/rules/#pep8-naming-n
+    "D",     # pydocstyle             https://docs.astral.sh/ruff/rules/#pydocstyle-d
+    "I",     # isort                  https://docs.astral.sh/ruff/rules/#isort-i
+    "F",     # pyflakes               https://docs.astral.sh/ruff/rules/#pyflakes-f
+    "ASYNC", # flake8-async           https://docs.astral.sh/ruff/rules/#flake8-async-async
+    "C4",    # flake8-comprehensions  https://docs.astral.sh/ruff/rules/#flake8-comprehensions-c4
+    "B",     # flake8-bugbear         https://docs.astral.sh/ruff/rules/#flake8-bugbear-b
+    "Q",     # flake8-quotes          https://docs.astral.sh/ruff/rules/#flake8-quotes-q
+    "T20",   # flake8-print           https://docs.astral.sh/ruff/rules/#flake8-print-t20
+    "SIM",   # flake8-simplify        https://docs.astral.sh/ruff/rules/#flake8-simplify-sim
+    "PT",    # flake8-pytest-style    https://docs.astral.sh/ruff/rules/#flake8-pytest-style-pt
+    "PTH",   # flake8-use-pathlib     https://docs.astral.sh/ruff/rules/#flake8-use-pathlib-pth
+    "TCH",   # flake8-type-checking   https://docs.astral.sh/ruff/rules/#flake8-type-checking-tch
+    "RUF",   # Ruff-specific rules    https://docs.astral.sh/ruff/rules/#ruff-specific-rules-ruf
+    "PERF",  # Perflint               https://docs.astral.sh/ruff/rules/#perflint-perf
+    "UP",    # pyupgrade              https://docs.astral.sh/ruff/rules/#pyupgrade-up
+]
+
+ignore = [
+    "RUF009", # Do not call in dataclass defaults
+
+    "ASYNC109", # own timeout implementation
+
+    "E501",     # line too long, handled by formatter later
+    "C901",     # too complex
+
+    # todo pep8-naming
+    "N817",     # CamelCase `*` imported as acronym `*`
+    "N815",     # Variable `*` in class scope should not be mixedCase
+    "N803",     # Argument name `expandMessageExamples` should be lowercase
+
+    # todo pydocstyle
+    "D100",     # missing docstring in public module
+    "D101",
+    "D102",
+    "D103",
+    "D104",     # missing docstring in public package
+    "D105",     # missing docstring in magic methods
+    "D106",     # missing docstring in public nested class
+    "D107",     # missing docstring in __init__
+    "D212",
+    "D203"
+]
+
+
+[tool.ruff.lint.isort]
+case-sensitive = true
+combine-as-imports = true
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "lf"

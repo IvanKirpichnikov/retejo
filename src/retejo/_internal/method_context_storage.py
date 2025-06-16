@@ -1,5 +1,5 @@
 from collections import defaultdict
-from collections.abc import Iterable, Mapping, MutableMapping
+from collections.abc import Iterable, Mapping, MutableMapping, Sequence
 from dataclasses import Field, dataclass, fields as get_fields
 from enum import Enum
 from typing import Any, NotRequired, TypedDict
@@ -27,7 +27,7 @@ class RequestComponentsKey(Enum):
 @dataclass
 class MethodContext:
     fields: Mapping[RequestComponentsKey, Iterable[Field[Any]]]
-    types: Mapping[RequestComponentsKey, type[Any]]
+    types: Mapping[RequestComponentsKey, type[Any] | None]
 
 
 class MethodContextStorage:
@@ -70,8 +70,8 @@ class MethodContextStorage:
 
     def _sort_fields(
         self,
-        fields: Iterable[Field[Any]],
-    ) -> Mapping[RequestComponentsKey, Iterable[Field[Any]]]:
+        fields: Sequence[Field[Any]],
+    ) -> Mapping[RequestComponentsKey, Sequence[Field[Any]]]:
         result: dict[RequestComponentsKey, list[Field[Any]]] = defaultdict(list)
 
         for field in fields:
@@ -95,8 +95,11 @@ class MethodContextStorage:
         self,
         method_tp: type[Method[Any]],
         component_name: RequestComponentsKey,
-        fields: Iterable[Field[Any]],
-    ) -> Any:
+        fields: Sequence[Field[Any]],
+    ) -> Any | None:
+        if not fields:
+            return None
+
         name = f"{method_tp.__name__}{component_name.name}Type"
 
         fields_tp: MutableMapping[str, Any] = {}

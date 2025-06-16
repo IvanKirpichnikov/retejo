@@ -2,10 +2,11 @@ from collections.abc import Callable
 from typing import Annotated, Any, TypeGuard, get_origin
 
 
-class _Marker: ...
+class _Marker:
+    pass
 
 
-def _is_marker[T: _Marker](marker: type[T]) -> Callable[[Any], TypeGuard[T]]:
+def is_marker_factory[T: _Marker](marker: type[T]) -> Callable[[Any], TypeGuard[T]]:
     def wrapper(obj: Any) -> TypeGuard[T]:
         if get_origin(obj) is Annotated:
             return isinstance(obj.__metadata__[0], marker)
@@ -14,4 +15,4 @@ def _is_marker[T: _Marker](marker: type[T]) -> Callable[[Any], TypeGuard[T]]:
     return wrapper
 
 
-is_marker = _is_marker(_Marker)
+is_marker = is_marker_factory(_Marker)

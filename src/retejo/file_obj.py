@@ -3,7 +3,7 @@ from typing import IO
 
 
 @dataclass
-class File:
+class FileObj:
     contents: str | IO[bytes] | None = None
     content_type: str | None = None
     filename: str | None = None

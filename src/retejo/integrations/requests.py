@@ -6,11 +6,11 @@ from typing import override
 from requests import RequestException, Session
 
 from retejo.errors import ClientLibraryError, MalformedResponseError
-from retejo.integrations.base import BaseSession
-from retejo.interfaces.session import Request, Response
+from retejo.integrations.base import SyncBaseClient
+from retejo.interfaces.sendable_request import Request, Response
 
 
-class RequestsSession(BaseSession):
+class RequestsClient(SyncBaseClient):
     _base_url: str
     _session: Session
 
@@ -43,7 +43,7 @@ class RequestsSession(BaseSession):
         request: Request,
     ) -> Response:
         response = self._session.request(
-            method=request.http_method.value,
+            method=request.http_method,
             url=urllib.parse.urljoin(self._base_url, request.url),
             params=request.query_params,
             json=request.body,

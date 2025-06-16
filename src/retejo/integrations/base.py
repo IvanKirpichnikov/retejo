@@ -8,7 +8,7 @@ from retejo.errors import ClientError, ServerError
 from retejo.interfaces.client import AsyncClient, SyncClient
 from retejo.interfaces.factory import Factory
 from retejo.interfaces.method import Method
-from retejo.interfaces.request_conext_builder import RequestContextBuilder
+from retejo.interfaces.request_context_builder import RequestContextBuilder
 from retejo.interfaces.sendable_request import Request, Response
 from retejo.markers import Omitted
 from retejo.request_context_builder import RequestContextBuilderImpl

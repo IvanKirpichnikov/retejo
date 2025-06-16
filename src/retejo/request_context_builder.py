@@ -7,7 +7,7 @@ from retejo._internal.method_context_storage import (
 )
 from retejo.interfaces.factory import Factory
 from retejo.interfaces.method import Method
-from retejo.interfaces.request_conext_builder import RequestContext, RequestContextBuilder
+from retejo.interfaces.request_context_builder import RequestContext, RequestContextBuilder
 from retejo.markers import is_omitted
 
 

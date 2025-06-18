@@ -40,7 +40,7 @@ class PostId:
     id: int
 ```
 
-Потом нужно объявить метод.
+Далее объявить метод.
 
 В **retejo** каждый метод наследуется от базового класса Method. При наследовании в Method передается модель, которая описывает ответ метода.
 
@@ -62,7 +62,7 @@ class CreatePost(Method[PostId]):
     body: Body[str]
 ```
 
-Теперь объявляем клиент. В super передаем базовую ссылку.
+Теперь клиент. В super передаем базовую ссылку.
 
 Так же переопределяем логику парсинга ответа.
 За большей информацией по adaptix обратитесь к [его документации](https://adaptix.readthedocs.io/).
@@ -104,7 +104,7 @@ get_post = bind_method(GetPost)
 
 Эквивалентно следующему.
 
-```
+```python
 def get_post(self, id: int) -> Post:
     return self.send_method(
         GetPost(

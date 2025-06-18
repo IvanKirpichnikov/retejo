@@ -3,7 +3,9 @@ from typing import Annotated, Any, TypeGuard, get_args, get_origin
 from retejo._internal.markers.base import BaseMarker
 
 
-class Omitted(BaseMarker): ...
+class Omitted(BaseMarker):
+    def __bool__(self) -> bool | None:
+        return False
 
 
 type Omittable[T] = T | Omitted

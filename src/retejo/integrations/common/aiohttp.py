@@ -5,14 +5,12 @@ from typing import Any, override
 from aiohttp import ClientError, ClientSession
 
 from retejo.errors import ClientLibraryError, MalformedResponseError
-from retejo.integrations.base import AsyncBaseClient
+from retejo.integrations.common.base import AsyncBaseClient
 from retejo.interfaces import Request, Response
 
 
-class AiottpClient(AsyncBaseClient):
+class AiohttpBaseClient(AsyncBaseClient):
     _session: ClientSession
-
-    __slots__ = "_session"
 
     def __init__(
         self,

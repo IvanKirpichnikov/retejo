@@ -15,11 +15,11 @@ from methods import (
 
 from retejo.bind_method import bind_method
 from retejo.file_obj import FileObj
-from retejo.integrations.aiohttp import AiottpClient
+from retejo.integrations.adaptix.aiohttp import AiohttpAdaptixClient
 from retejo.interfaces import Factory
 
 
-class AsyncClient(AiottpClient):
+class AsyncClient(AiohttpAdaptixClient):
     def __init__(self) -> None:
         super().__init__("https://jsonplaceholder.typicode.com/")
 

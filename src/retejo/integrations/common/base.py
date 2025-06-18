@@ -1,8 +1,7 @@
+from abc import abstractmethod
 from collections.abc import Mapping, MutableMapping
 from types import NoneType
-from typing import Any, override
-
-from adaptix import Retort, as_sentinel, name_mapping
+from typing import Any, Protocol, override
 
 from retejo.errors import ClientError, ServerError
 from retejo.interfaces import (
@@ -17,7 +16,6 @@ from retejo.markers import (
     BaseMarker,
     BodyMarker,
     HeaderMarker,
-    Omitted,
     QueryParamMarker,
     UrlVarMarker,
 )
@@ -27,41 +25,23 @@ from retejo.request_context_builder import SimpleRequestContextBuilder
 type MarkersFactorties = MutableMapping[type[BaseMarker], Factory]
 
 
-class BaseClient:
+class BaseClient(Protocol):
     _response_factory: Factory
     _request_context_builder: RequestContextBuilder
     _markers_factories: MarkersFactorties
-
-    __slots__ = (
-        "_markers_factories",
-        "_request_context_builder",
-        "_response_factory",
-    )
 
     def __init__(self) -> None:
         self._markers_factories = self.init_markers_factories()
         self._response_factory = self.init_response_factory()
         self._request_context_builder = self.init_request_context_builder()
 
+    @abstractmethod
     def init_markers_factories(self) -> MarkersFactorties:
-        retort = Retort(
-            recipe=[
-                as_sentinel(Omitted),
-                name_mapping(
-                    omit_default=True,
-                ),
-            ],
-        )
+        raise NotImplementedError
 
-        return {
-            BodyMarker: retort,
-            UrlVarMarker: retort,
-            HeaderMarker: retort,
-            QueryParamMarker: retort,
-        }
-
+    @abstractmethod
     def init_response_factory(self) -> Factory:
-        return Retort()
+        raise NotImplementedError
 
     def init_request_context_builder(self) -> RequestContextBuilder:
         return SimpleRequestContextBuilder(self._markers_factories)

@@ -1,28 +1,24 @@
 import urllib.parse
 from collections.abc import Mapping
 from json import JSONDecodeError
-from typing import override
+from typing import Any, override
 
 from requests import RequestException, Session
 
 from retejo.errors import ClientLibraryError, MalformedResponseError
-from retejo.integrations.base import SyncBaseClient
+from retejo.integrations.common.base import SyncBaseClient
 from retejo.interfaces import Request, Response
 
 
-class RequestsClient(SyncBaseClient):
+class RequestsBaseClient(SyncBaseClient):
     _base_url: str
     _session: Session
-
-    __slots__ = (
-        "_base_url",
-        "_session",
-    )
 
     def __init__(
         self,
         base_url: str,
         session: Session | None = None,
+        cookies: Mapping[str, Any] | None = None,
         headers: Mapping[str, str] | None = None,
     ) -> None:
         super().__init__()
@@ -36,6 +32,8 @@ class RequestsClient(SyncBaseClient):
 
         if headers is not None:
             self._session.headers.update(headers)
+        if cookies is not None:
+            self._session.cookies.update(cookies)
 
     @override
     def send_request(

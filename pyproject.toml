@@ -36,7 +36,6 @@ classifiers = [
     "Intended Audience :: System Administrators",
     "Environment :: Web Environment",
     "Framework :: AsyncIO",
-    "Framework :: Adaptix",
 ]
 dependencies = [
     "adaptix==3.0.0b11",

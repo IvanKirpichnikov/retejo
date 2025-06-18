@@ -37,15 +37,17 @@ classifiers = [
     "Environment :: Web Environment",
     "Framework :: AsyncIO",
 ]
-dependencies = [
-    "adaptix==3.0.0b11",
-]
 
 [project.optional-dependencies]
-requests = [ "requests>=2.20.0,<3.0.0" ]
-aiohttp = [ "aiohttp>=3.5.0,<4.0.0" ]
+requests = [ "requests>=2.27.0,<3.0.0" ]
+aiohttp = [ "aiohttp>=3.11.0,<4.0.0" ]
+adaptix = [ "adaptix>=3.0.0b1, <4.0.0" ]
+integrations = [
+    "retejo[aiohttp, requests]",
+    "retejo[adaptix]",
+]
 types = [
-    "types-requests==2.32.4.20250611"
+    "types-requests~=2.32.4.20250611",
 ]
 lint = [
     "mypy==1.16.0",
@@ -53,7 +55,7 @@ lint = [
     "basedmypy==2.10.0",
 ]
 dev = [
-    "retejo[lint, types, requests]",
+    "retejo[lint, types, integrations]",
 ]
 
 [tool.mypy]

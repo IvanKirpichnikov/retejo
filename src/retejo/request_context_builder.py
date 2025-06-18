@@ -1,20 +1,17 @@
 from collections.abc import Mapping
 from typing import Any, override
 
-from retejo._internal.interfaces.factory import Factory
-from retejo._internal.interfaces.request_context_builder import (
+from retejo.interfaces import (
+    Factory,
     RequestContext,
     RequestContextBuilder,
 )
-from retejo._internal.markers.base import BaseMarker
-from retejo.markers import is_omitted
+from retejo.markers import BaseMarker, is_omitted
 from retejo.method import Method
 
 
 class SimpleRequestContextBuilder(RequestContextBuilder):
     _markers_factories: Mapping[type[BaseMarker], Factory]
-
-    __slots__ = ("_markers_factories",)
 
     def __init__(self, markers_factories: Mapping[type[BaseMarker], Factory]) -> None:
         self._markers_factories = markers_factories

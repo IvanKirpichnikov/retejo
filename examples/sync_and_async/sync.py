@@ -14,11 +14,11 @@ from methods import (
 
 from retejo.bind_method import bind_method
 from retejo.file_obj import FileObj
-from retejo.integrations.requests import RequestsClient
+from retejo.integrations.adaptix.requests import RequestsAdaptixClient
 from retejo.interfaces import Factory
 
 
-class Client(RequestsClient):
+class Client(RequestsAdaptixClient):
     def __init__(self) -> None:
         super().__init__("https://jsonplaceholder.typicode.com/")
 

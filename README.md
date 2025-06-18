@@ -11,15 +11,15 @@
 Вы можете установить **retejo** с помощью **pip**:
 
 ```bash
-pip install retejo[requests]
-pip install retejo[aiohttp]
+pip install retejo[requests, adaptix]
+pip install retejo[aiohttp, adaptix]
 ```
 
 или **uv**:
 
 ```bash
-uv pip install retejo[requests]
-uv pip install retejo[aiohttp]
+uv pip install retejo[requests, adaptix]
+uv pip install retejo[aiohttp, adaptix]
 ```
 
 
@@ -68,7 +68,7 @@ class CreatePost(Method[PostId]):
 За большей информацией по adaptix обратитесь к [его документации](https://adaptix.readthedocs.io/).
 
 ```python
-class Client(RequestsClient):
+class Client(RequestsAdaptixClient):
     def __init__(self) -> None:
         super().__init__("https://jsonplaceholder.typicode.com/")
 
@@ -88,7 +88,7 @@ class Client(RequestsClient):
 Далее нужно привязать методы к клиенту. Для этого используется функция bind_method.
 
 ```python
-class Client(RequestsClient):
+class Client(RequestsAdaptixClient):
     # ...
     get_post = bind_method(GetPost)
     create_post = bind_method(CreatePost)
@@ -156,7 +156,7 @@ class CreatePost(Method[PostId]):
     body: Body[str]
 
 
-class Client(RequestsClient):
+class Client(RequestsAdaptixClient):
     def __init__(self) -> None:
         super().__init__(base_url="https://jsonplaceholder.typicode.com/")
 
@@ -189,15 +189,15 @@ client.close()
 1. Установить retejo с aiohttp.
 
     ```bash
-    pip install retejo[aiohttp]
+    pip install retejo[aiohttp, adaptix]
     ```
 
-2. Наследоваться от AiohttpClient.
+2. Наследоваться от AiohttpAdaptixClient.
 
 3. Вызывать все методы клиента асинхронно.
 
     ```py
-    class Client(AiohttpClient):
+    class Client(AiohttpAdaptixClient):
         def __init__(self) -> None:
             super().__init__(base_url="https://jsonplaceholder.typicode.com/")
 
@@ -255,7 +255,7 @@ class AddModel(Method[Any]):
     number: Body[Omittable[str]] = Omitted()
 
 
-class Client(RequestsClient):
+class Client(RequestsAdaptixClient):
     def __init__(self) -> None:
         super().__init__("")
 

@@ -1,8 +1,10 @@
 from collections.abc import Callable
 from typing import Annotated, Any, TypeGuard, get_origin
 
+from retejo._internal.singlton import SingletonMeta
 
-class BaseMarker:
+
+class BaseMarker(metaclass=SingletonMeta):
     pass
 
 

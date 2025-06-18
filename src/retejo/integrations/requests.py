@@ -7,7 +7,7 @@ from requests import RequestException, Session
 
 from retejo.errors import ClientLibraryError, MalformedResponseError
 from retejo.integrations.base import SyncBaseClient
-from retejo.interfaces.sendable_request import Request, Response
+from retejo.interfaces import Request, Response
 
 
 class RequestsClient(SyncBaseClient):
@@ -51,14 +51,14 @@ class RequestsClient(SyncBaseClient):
         )
 
         try:
-            body = response.json()
+            data = response.json()
         except RequestException as e:
             raise ClientLibraryError from e
         except JSONDecodeError as e:
             raise MalformedResponseError from e
 
         return Response(
-            body=body,
+            data=data,
             status_code=response.status_code,
         )
 

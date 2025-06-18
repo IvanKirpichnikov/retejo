@@ -1,9 +1,9 @@
 from typing import TYPE_CHECKING, Annotated, Any
 
-from retejo._internal.markers.base import _Marker, is_marker_factory
+from retejo._internal.markers.base import BaseMarker, is_marker_factory
 
 
-class _File(_Marker):
+class FileMarker(BaseMarker):
     pass
 
 
@@ -13,7 +13,7 @@ else:
 
     class File:
         def __class_getitem__(cls, item: Any) -> Any:
-            return Annotated[item, _File()]
+            return Annotated[item, FileMarker()]
 
 
-is_file = is_marker_factory(_File)
+is_file = is_marker_factory(FileMarker)

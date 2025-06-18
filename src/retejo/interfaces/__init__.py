@@ -1,15 +1,22 @@
-from .client import AsyncClient, SyncClient
-from .method import Method
-from .request_context_builder import RequestContextBuilder
-from .sendable_method import AsyncSendableMethod, SyncSendableMethod
-from .sendable_request import AsyncSendableRequest, SyncSendableRequest
+from retejo._internal.interfaces.client import AsyncClient, SyncClient
+from retejo._internal.interfaces.factory import Factory
+from retejo._internal.interfaces.request_context_builder import RequestContextBuilder
+from retejo._internal.interfaces.sendable_method import AsyncSendableMethod, SyncSendableMethod
+from retejo._internal.interfaces.sendable_request import (
+    AsyncSendableRequest,
+    Request,
+    Response,
+    SyncSendableRequest,
+)
 
 __all__ = [
     "AsyncClient",
     "AsyncSendableMethod",
     "AsyncSendableRequest",
-    "Method",
+    "Factory",
+    "Request",
     "RequestContextBuilder",
+    "Response",
     "SyncClient",
     "SyncSendableMethod",
     "SyncSendableRequest",

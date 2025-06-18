@@ -6,7 +6,7 @@ from aiohttp import ClientError, ClientSession
 
 from retejo.errors import ClientLibraryError, MalformedResponseError
 from retejo.integrations.base import AsyncBaseClient
-from retejo.interfaces.sendable_request import Request, Response
+from retejo.interfaces import Request, Response
 
 
 class AiottpClient(AsyncBaseClient):
@@ -46,14 +46,14 @@ class AiottpClient(AsyncBaseClient):
             headers=request.headers,
         ) as response:
             try:
-                body = await response.json()
+                data = await response.json()
             except ClientError as e:
                 raise ClientLibraryError from e
             except JSONDecodeError as e:
                 raise MalformedResponseError from e
 
             return Response(
-                body=body,
+                data=data,
                 status_code=response.status,
             )
 

@@ -1,13 +1,12 @@
 from abc import abstractmethod
 from typing import Protocol, runtime_checkable
 
-from retejo.interfaces.sendable_method import AsyncSendableMethod, SyncSendableMethod
-from retejo.interfaces.sendable_request import AsyncSendableRequest, Response, SyncSendableRequest
-
-__all__ = [
-    "AsyncClient",
-    "SyncClient",
-]
+from retejo._internal.interfaces.sendable_method import AsyncSendableMethod, SyncSendableMethod
+from retejo._internal.interfaces.sendable_request import (
+    AsyncSendableRequest,
+    Response,
+    SyncSendableRequest,
+)
 
 
 @runtime_checkable

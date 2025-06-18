@@ -3,13 +3,14 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any, Protocol, runtime_checkable
 
-__all__ = ["AsyncSendableRequest", "Request", "Response", "SyncSendableRequest"]
+from retejo._internal.interfaces.request_context_builder import RequestContext
 
 
 @dataclass(slots=True, frozen=True)
 class Request:
     url: str
     http_method: str
+    context: RequestContext
     body: Mapping[str, str] | None = None
     headers: Mapping[str, str] | None = None
     query_params: Mapping[str, str] | None = None
@@ -17,7 +18,7 @@ class Request:
 
 @dataclass(frozen=True, slots=True)
 class Response:
-    body: Mapping[str, Any]
+    data: Mapping[str, Any]
     status_code: int
 
 

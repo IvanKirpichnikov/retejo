@@ -1,12 +1,8 @@
 import contextlib
 import logging
-from typing import Final, override
+from typing import override
 
 from adaptix import NameStyle, Retort, name_mapping
-
-from retejo.file_obj import FileObj
-from retejo.integrations.requests import RequestsClient
-
 from methods import (
     CreatePost,
     DeletePost,
@@ -15,17 +11,20 @@ from methods import (
     ListPosts,
     UploadImage,
 )
-from retejo.bind import bind_method
+
+from retejo.bind_method import bind_method
+from retejo.file_obj import FileObj
+from retejo.integrations.requests import RequestsClient
+from retejo.interfaces import Factory
 
 
 class Client(RequestsClient):
     def __init__(self) -> None:
-        super().__init__(base_url="https://jsonplaceholder.typicode.com/")
+        super().__init__("https://jsonplaceholder.typicode.com/")
 
     @override
-    def _init_response_factory(self) -> Retort:
-        retort = super()._init_response_factory()
-        return retort.extend(
+    def init_response_factory(self) -> Factory:
+        return Retort(
             recipe=[
                 name_mapping(name_style=NameStyle.CAMEL),
             ]
@@ -60,4 +59,3 @@ def main() -> None:
 
 logging.basicConfig(level=logging.INFO)
 main()
-sync

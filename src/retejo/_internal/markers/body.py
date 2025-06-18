@@ -1,9 +1,9 @@
 from typing import TYPE_CHECKING, Annotated, Any, TypeVar
 
-from retejo._internal.markers.base import _Marker, is_marker_factory
+from retejo._internal.markers.base import BaseMarker, is_marker_factory
 
 
-class _Body(_Marker):
+class BodyMarker(BaseMarker):
     pass
 
 
@@ -15,7 +15,7 @@ else:
 
     class Body:
         def __class_getitem__(cls, item: Any) -> Any:
-            return Annotated[item, _Body()]
+            return Annotated[item, BodyMarker()]
 
 
-is_body = is_marker_factory(_Body)
+is_body = is_marker_factory(BodyMarker)

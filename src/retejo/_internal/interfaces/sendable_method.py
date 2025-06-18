@@ -1,12 +1,7 @@
 from abc import abstractmethod
 from typing import Protocol, runtime_checkable
 
-from retejo.interfaces.method import Method
-
-__all__ = [
-    "AsyncSendableMethod",
-    "SyncSendableMethod",
-]
+from retejo.method import Method
 
 
 @runtime_checkable

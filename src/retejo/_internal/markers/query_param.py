@@ -1,9 +1,9 @@
 from typing import TYPE_CHECKING, Annotated, Any
 
-from retejo._internal.markers.base import _Marker, is_marker_factory
+from retejo._internal.markers.base import BaseMarker, is_marker_factory
 
 
-class _QueryParam(_Marker):
+class QueryParamMarker(BaseMarker):
     pass
 
 
@@ -13,7 +13,7 @@ else:
 
     class QueryParam:
         def __class_getitem__(cls, item: Any) -> Any:
-            return Annotated[item, _QueryParam()]
+            return Annotated[item, QueryParamMarker()]
 
 
-is_query_param = is_marker_factory(_QueryParam)
+is_query_param = is_marker_factory(QueryParamMarker)

@@ -1,8 +1,7 @@
-from typing import Any, Protocol, overload
-
-__all__ = ["Factory"]
+from typing import Any, Protocol, overload, runtime_checkable
 
 
+@runtime_checkable
 class Factory(Protocol):
     @overload
     def load[T](self, data: Any, tp: type[T], /) -> T: ...

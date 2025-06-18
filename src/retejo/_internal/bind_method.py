@@ -1,10 +1,8 @@
 from collections.abc import Awaitable, Callable
 from typing import Any, NoReturn, overload
 
-from retejo.interfaces.method import Method
-from retejo.interfaces.sendable_method import AsyncSendableMethod, SyncSendableMethod
-
-__all__ = ["bind_method"]
+from retejo.interfaces import AsyncSendableMethod, SyncSendableMethod
+from retejo.method import Method
 
 
 class _BindMethod[**P, T]:
@@ -41,7 +39,3 @@ class _BindMethod[**P, T]:
             return async_wrapper
 
         raise RuntimeError("method_call use is only Session subclasses")
-
-
-def bind_method[**P, T](method: Callable[P, Method[T]]) -> _BindMethod[P, T]:
-    return _BindMethod(method)

@@ -49,6 +49,7 @@ types = [
 lint = [
     "mypy==1.16.0",
     "ruff==0.11.13",
+    "basedmypy==2.10.0",
 ]
 dev = [
     "retejo[lint, types, requests]",
@@ -56,16 +57,27 @@ dev = [
 
 [tool.mypy]
 files = ["src"]
+exclude = [
+    "src/retejo/_internal/_adaptix/",
+    "src/retejo/_internal/parents_resolver.py"
+]
 strict = true
 python_version = "3.12"
 enable_error_code = "explicit-override"
 sqlite_cache = true
+
+disallow_any_decorated = false
+disallow_any_generics = false
+disallow_any_explicit = false
+disallow_any_expr = false
+disallow_untyped_calls = false
 
 [tool.ruff]
 include = [
     "src/retejo/**/*.py",
     "pyproject.toml"
 ]
+exclude = ["src/retejo/_internal/_adaptix"]
 fix = true
 line-length = 99
 target-version = "py312"

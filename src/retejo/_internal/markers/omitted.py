@@ -1,9 +1,9 @@
 from typing import Annotated, Any, TypeGuard, get_args, get_origin
 
-from retejo._internal.markers.base import _Marker
+from retejo._internal.markers.base import BaseMarker
 
 
-class Omitted(_Marker): ...
+class Omitted(BaseMarker): ...
 
 
 type Omittable[T] = T | Omitted

@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from typing import Any
 
 from retejo.file_obj import FileObj
-from retejo.interfaces.method import Method
 from retejo.markers import Body, File, UrlVar
+from retejo.method import Method
 
 
 @dataclass

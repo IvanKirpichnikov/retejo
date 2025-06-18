@@ -1,47 +1,50 @@
-from collections.abc import Mapping
+from collections.abc import Mapping, MutableMapping
 from types import NoneType
 from typing import Any, override
 
 from adaptix import Retort, as_sentinel, name_mapping
 
 from retejo.errors import ClientError, ServerError
-from retejo.interfaces.client import AsyncClient, SyncClient
-from retejo.interfaces.factory import Factory
-from retejo.interfaces.method import Method
-from retejo.interfaces.request_context_builder import RequestContextBuilder
-from retejo.interfaces.sendable_request import Request, Response
-from retejo.markers import Omitted
-from retejo.request_context_builder import RequestContextBuilderImpl
+from retejo.interfaces import (
+    AsyncClient,
+    Factory,
+    Request,
+    RequestContextBuilder,
+    Response,
+    SyncClient,
+)
+from retejo.markers import (
+    BaseMarker,
+    BodyMarker,
+    HeaderMarker,
+    Omitted,
+    QueryParamMarker,
+    UrlVarMarker,
+)
+from retejo.method import Method
+from retejo.request_context_builder import SimpleRequestContextBuilder
+
+type MarkersFactorties = MutableMapping[type[BaseMarker], Factory]
 
 
 class BaseClient:
-    _request_body_factory: Factory
-    _request_url_vars_factory: Factory
-    _request_query_params_factory: Factory
     _response_factory: Factory
     _request_context_builder: RequestContextBuilder
+    _markers_factories: MarkersFactorties
 
     __slots__ = (
-        "_request_body_factory",
+        "_markers_factories",
         "_request_context_builder",
-        "_request_query_params_factory",
-        "_request_url_vars_factory",
         "_response_factory",
     )
 
     def __init__(self) -> None:
-        self._request_body_factory = self._init_request_body_factory()
-        self._request_url_vars_factory = self._init_request_url_vars_factory()
-        self._request_query_params_factory = self._init_request_query_params_factory()
-        self._response_factory = self._init_response_factory()
-        self._request_context_builder = self._init_request_context_builder(
-            body_factory=self._request_body_factory,
-            url_vars_factory=self._request_url_vars_factory,
-            query_params_factory=self._request_query_params_factory,
-        )
+        self._markers_factories = self.init_markers_factories()
+        self._response_factory = self.init_response_factory()
+        self._request_context_builder = self.init_request_context_builder()
 
-    def _init_request_body_factory(self) -> Retort:
-        return Retort(
+    def init_markers_factories(self) -> MarkersFactorties:
+        retort = Retort(
             recipe=[
                 as_sentinel(Omitted),
                 name_mapping(
@@ -50,66 +53,47 @@ class BaseClient:
             ],
         )
 
-    def _init_request_url_vars_factory(self) -> Retort:
-        return Retort(
-            recipe=[
-                as_sentinel(Omitted),
-                name_mapping(
-                    omit_default=True,
-                ),
-            ],
-        )
+        return {
+            BodyMarker: retort,
+            UrlVarMarker: retort,
+            HeaderMarker: retort,
+            QueryParamMarker: retort,
+        }
 
-    def _init_request_query_params_factory(self) -> Retort:
-        return Retort(
-            recipe=[
-                as_sentinel(Omitted),
-                name_mapping(
-                    omit_default=True,
-                ),
-            ],
-        )
-
-    def _init_response_factory(self) -> Retort:
+    def init_response_factory(self) -> Factory:
         return Retort()
 
-    def _init_request_context_builder(
-        self,
-        body_factory: Factory,
-        url_vars_factory: Factory,
-        query_params_factory: Factory,
-    ) -> RequestContextBuilder:
-        return RequestContextBuilderImpl(
-            body_factory=body_factory,
-            url_vars_factory=url_vars_factory,
-            query_params_factory=query_params_factory,
-        )
+    def init_request_context_builder(self) -> RequestContextBuilder:
+        return SimpleRequestContextBuilder(self._markers_factories)
 
     def _method_to_request(self, method: Method[Any]) -> Request:
         request_context = self._request_context_builder.build(method)
 
-        if request_context.url_vars is None:
+        url_vars = request_context.get(UrlVarMarker)
+
+        if url_vars is None:  # noqa: SIM108
             url = method.__url__
         else:
-            url = method.__url__.format_map(request_context.url_vars)
+            url = method.__url__.format_map(url_vars)
 
         return Request(
             url=url,
-            body=request_context.body,
-            headers=request_context.headers,
             http_method=method.__method__,
-            query_params=request_context.query_params,
+            body=request_context.get(BodyMarker),
+            headers=request_context.get(HeaderMarker),
+            query_params=request_context.get(QueryParamMarker),
+            context=request_context,
         )
 
-    def _load_response[T](
+    def _load_method_returning[T](
         self,
-        tp: type[T],
-        data: Mapping[str, Any],
+        response: Mapping[str, Any],
+        method_returning_tp: type[T],
     ) -> T:
-        if tp is NoneType:
+        if method_returning_tp is NoneType:
             return None  # type: ignore[return-value]
 
-        return self._response_factory.load(data, tp)
+        return self._response_factory.load(response, method_returning_tp)
 
 
 class SyncBaseClient(BaseClient, SyncClient):
@@ -135,9 +119,9 @@ class SyncBaseClient(BaseClient, SyncClient):
 
         self._handle_response(response)
 
-        return self._load_response(
-            tp=method.__returning__,
-            data=response.body,
+        return self._load_method_returning(
+            response=response.data,
+            method_returning_tp=method.__returning__,
         )
 
 
@@ -164,7 +148,7 @@ class AsyncBaseClient(BaseClient, AsyncClient):
 
         await self._handle_response(response)
 
-        return self._load_response(
-            tp=method.__returning__,
-            data=response.body,
+        return self._load_method_returning(
+            response=response.data,
+            method_returning_tp=method.__returning__,
         )

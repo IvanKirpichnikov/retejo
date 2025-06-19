@@ -11,7 +11,7 @@ where = ["src"]
 [project]
 name = "retejo"
 description = "Modern python http client"
-version = "0.0.3"
+version = "0.0.4"
 readme = "README.md"
 authors = [
     { name = "Ivan Kirpichnikov", email = "mmssvvvv570@gmail.com" }

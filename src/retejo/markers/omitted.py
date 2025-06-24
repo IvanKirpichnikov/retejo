@@ -1,4 +1,4 @@
-from typing import Annotated, Any, TypeGuard, get_args, get_origin
+from typing import Any, TypeGuard, get_args, get_origin
 
 from retejo.markers.base import BaseMarker
 
@@ -11,14 +11,26 @@ class Omitted(BaseMarker):
 type Omittable[T] = T | Omitted
 
 
-def is_omitted(obj: Any) -> TypeGuard[Omitted]:
-    return isinstance(obj, Omitted)
+def is_omitted(value: Any) -> TypeGuard[Omitted]:
+    return isinstance(value, Omitted)
+
+
+def is_not_omitted[T](value: Omittable[T]) -> TypeGuard[T]:
+    return not isinstance(value, Omitted)
+
+
+def is_defined[T](value: Omittable[T | None]) -> TypeGuard[T]:
+    return not isinstance(value, Omitted) or value is not None
 
 
 def is_omittable(tp: Any) -> TypeGuard[Omittable[Any]]:
     origin = get_origin(tp)
+    if origin is Omittable:
+        return True
 
-    if origin is Annotated:
-        tp = get_args(tp)[0]
+    if origin:
+        args = get_args(tp)
+        if args:
+            return is_omittable(args[0])
 
-    return get_origin(tp) is Omittable
+    return False

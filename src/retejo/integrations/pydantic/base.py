@@ -5,12 +5,10 @@ from pydantic import TypeAdapter
 
 from retejo.integrations.common.base import BaseClient, MarkersFactorties
 from retejo.interfaces import Factory
-from retejo.markers import (
-    BodyMarker,
-    HeaderMarker,
-    QueryParamMarker,
-    UrlVarMarker,
-)
+from retejo.markers.body import BodyMarker
+from retejo.markers.header import HeaderMarker
+from retejo.markers.query_param import QueryParamMarker
+from retejo.markers.url_var import UrlVarMarker
 
 
 class PydanticFactory(Factory):

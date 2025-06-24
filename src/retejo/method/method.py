@@ -1,9 +1,9 @@
 from abc import abstractmethod
 from dataclasses import dataclass
-from typing import Any, dataclass_transform, get_args, get_origin
+from typing import Any, ClassVar, dataclass_transform, get_args, get_origin
 
-from retejo._internal.method.context import MethodContext, create_method_context
 from retejo._internal.parents_resolver import ParentsResolver
+from retejo.method.context import MethodContext, create_method_context
 
 
 def get_returning_tp(tp: Any) -> Any:
@@ -44,10 +44,5 @@ class Method[T](metaclass=MethodMetaClass):
         raise NotImplementedError
 
     # fill in meta class
-    @property
-    def __returning__(self) -> type[T]:
-        raise NotImplementedError
-
-    @property
-    def __context__(self) -> MethodContext:
-        raise NotImplementedError
+    __context__: ClassVar[MethodContext]
+    __returning__: ClassVar[type[T]]  # type: ignore[misc]

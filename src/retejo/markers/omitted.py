@@ -1,6 +1,6 @@
 from typing import Annotated, Any, TypeGuard, get_args, get_origin
 
-from retejo._internal.markers.base import BaseMarker
+from retejo.markers.base import BaseMarker
 
 
 class Omitted(BaseMarker):

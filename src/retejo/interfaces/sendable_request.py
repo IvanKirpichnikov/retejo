@@ -3,7 +3,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any, Protocol, runtime_checkable
 
-from retejo._internal.interfaces.request_context_builder import RequestContext
+from retejo.interfaces.request_context_builder import RequestContext
 
 
 @dataclass(slots=True, frozen=True)

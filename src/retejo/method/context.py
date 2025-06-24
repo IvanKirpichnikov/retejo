@@ -3,11 +3,11 @@ from collections.abc import Mapping, MutableMapping, Sequence
 from dataclasses import Field, dataclass, fields as get_fields
 from typing import TYPE_CHECKING, Any, NotRequired, TypedDict
 
-from retejo._internal.markers.base import BaseMarker, get_marker_type
-from retejo._internal.markers.omitted import is_omittable
+from retejo.markers.base import BaseMarker, get_marker_type
+from retejo.markers.omitted import is_omittable
 
 if TYPE_CHECKING:
-    from retejo._internal.method.method import Method
+    from retejo.method.method import Method
 
 
 @dataclass(slots=True, frozen=True)

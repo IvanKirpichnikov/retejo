@@ -1,5 +1,5 @@
-from retejo._internal.method.context import MethodContext
-from retejo._internal.method.method import Method
+from .context import MethodContext
+from .method import Method
 
 __all__ = [
     "Method",

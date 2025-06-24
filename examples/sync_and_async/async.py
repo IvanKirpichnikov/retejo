@@ -1,5 +1,4 @@
 import asyncio
-import contextlib
 import logging
 from typing import override
 
@@ -41,9 +40,7 @@ class AsyncClient(AiohttpAdaptixClient):
 
 
 async def main() -> None:
-    client = AsyncClient()
-
-    async with contextlib.aclosing(client):
+    async with AsyncClient() as client:
         print(await client.list_posts())
         print(await client.get_post(84))
         print(await client.delete_post(84))

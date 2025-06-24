@@ -1,5 +1,6 @@
 from abc import abstractmethod
-from typing import Protocol, runtime_checkable
+from types import TracebackType
+from typing import Protocol, Self, runtime_checkable
 
 from retejo.interfaces.sendable_method import AsyncSendableMethod, SyncSendableMethod
 from retejo.interfaces.sendable_request import (
@@ -27,6 +28,17 @@ class SyncClient(
     def close(self) -> None:
         raise NotImplementedError
 
+    def __enter__(self) -> Self:
+        return self
+
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_value: BaseException | None,
+        traceback: TracebackType | None,
+    ) -> None:
+        self.close()
+
 
 @runtime_checkable
 class AsyncClient(
@@ -47,4 +59,15 @@ class AsyncClient(
         raise NotImplementedError
 
     async def aclose(self) -> None:
+        await self.close()
+
+    async def __aenter__(self) -> Self:
+        return self
+
+    async def __aexit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_value: BaseException | None,
+        traceback: TracebackType | None,
+    ) -> None:
         await self.close()

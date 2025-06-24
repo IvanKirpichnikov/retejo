@@ -2,7 +2,7 @@ from collections.abc import Mapping
 from json import JSONDecodeError
 from typing import Any, override
 
-from aiohttp import ClientError, ClientSession
+from aiohttp import ClientError, ClientSession, FormData
 
 from retejo.errors import ClientLibraryError, MalformedResponseError
 from retejo.integrations.common.base import AsyncBaseClient
@@ -36,22 +36,35 @@ class AiohttpBaseClient(AsyncBaseClient):
         self,
         request: Request,
     ) -> Response:
+        if request.files is not None:
+            data = FormData({})
+            for name, file in request.files.items():
+                data.add_field(
+                    name,
+                    filename=file.filename,
+                    content_type=file.content_type,
+                    value=file.contents,
+                )
+        else:
+            data = None
+
         async with self._session.request(
             method=request.http_method,
             url=request.url,
             params=request.query_params,
             json=request.body,
             headers=request.headers,
+            data=data,
         ) as response:
             try:
-                data = await response.json()
+                response_json = await response.json()
             except ClientError as e:
                 raise ClientLibraryError from e
             except JSONDecodeError as e:
                 raise MalformedResponseError from e
 
             return Response(
-                data=data,
+                data=response_json,
                 status_code=response.status,
             )
 

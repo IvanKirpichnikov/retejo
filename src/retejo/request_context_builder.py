@@ -6,7 +6,7 @@ from retejo.interfaces import (
     RequestContext,
     RequestContextBuilder,
 )
-from retejo.markers import BaseMarker, is_omitted
+from retejo.markers import BaseMarker
 from retejo.method import Method
 
 
@@ -25,10 +25,9 @@ class SimpleRequestContextBuilder(RequestContextBuilder):
         for marker_tp, marker_fields in context.fields.items():
             data = {}
 
-            for marker_filed in marker_fields:
-                method_attr_value = getattr(method, marker_filed.name)
-                if not is_omitted(method_attr_value):
-                    data[marker_filed.name] = method_attr_value
+            for marker_field in marker_fields:
+                method_attr_value = getattr(method, marker_field.name)
+                data[marker_field.name] = method_attr_value
 
             factory = self._markers_factories.get(marker_tp)
             if factory is not None:

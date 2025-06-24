@@ -1,7 +1,8 @@
 from typing import override
 
-from adaptix import Retort, as_sentinel, name_mapping
+from adaptix import Retort, as_sentinel
 
+from retejo.integrations.adaptix._omit_provider import OmitOmittedFieldProvider
 from retejo.integrations.common.base import BaseClient, MarkersFactorties
 from retejo.markers.body import BodyMarker
 from retejo.markers.header import HeaderMarker
@@ -16,9 +17,7 @@ class BaseAdaptixClient(BaseClient[Retort]):
         retort = Retort(
             recipe=[
                 as_sentinel(Omitted),
-                name_mapping(
-                    omit_default=True,
-                ),
+                OmitOmittedFieldProvider(),
             ],
         )
 

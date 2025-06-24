@@ -1,4 +1,3 @@
-import contextlib
 import logging
 from typing import override
 
@@ -40,9 +39,7 @@ class Client(RequestsAdaptixClient):
 
 
 def main() -> None:
-    client = Client()
-
-    with contextlib.closing(client):
+    with Client() as client:
         print(client.list_posts())
         print(client.get_post(84))
         print(client.delete_post(84))

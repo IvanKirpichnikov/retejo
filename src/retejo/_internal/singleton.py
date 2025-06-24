@@ -2,7 +2,7 @@ from collections.abc import MutableMapping
 from typing import Any, ClassVar, override
 
 
-class SingletonMeta(type):
+class Singleton(type):
     _instances: ClassVar[MutableMapping[Any, Any]] = {}
 
     @override

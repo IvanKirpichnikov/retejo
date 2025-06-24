@@ -1,8 +1,8 @@
 from abc import abstractmethod
 from typing import Protocol, runtime_checkable
 
-from retejo._internal.interfaces.sendable_method import AsyncSendableMethod, SyncSendableMethod
-from retejo._internal.interfaces.sendable_request import (
+from retejo.interfaces.sendable_method import AsyncSendableMethod, SyncSendableMethod
+from retejo.interfaces.sendable_request import (
     AsyncSendableRequest,
     Response,
     SyncSendableRequest,

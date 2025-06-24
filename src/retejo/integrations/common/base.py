@@ -12,13 +12,11 @@ from retejo.interfaces import (
     Response,
     SyncClient,
 )
-from retejo.markers import (
-    BaseMarker,
-    BodyMarker,
-    HeaderMarker,
-    QueryParamMarker,
-    UrlVarMarker,
-)
+from retejo.markers.base import BaseMarker
+from retejo.markers.body import BodyMarker
+from retejo.markers.header import HeaderMarker
+from retejo.markers.query_param import QueryParamMarker
+from retejo.markers.url_var import UrlVarMarker
 from retejo.method import Method
 from retejo.request_context_builder import SimpleRequestContextBuilder
 

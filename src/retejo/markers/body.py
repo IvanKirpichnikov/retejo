@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, Annotated, Any, TypeVar
 
-from retejo._internal.markers.base import BaseMarker, is_marker_factory
+from retejo.markers.base import BaseMarker, is_marker_factory
 
 
 class BodyMarker(BaseMarker):

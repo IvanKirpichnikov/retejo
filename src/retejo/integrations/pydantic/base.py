@@ -37,9 +37,9 @@ class PydanticFactory(Factory):
         return type_adapter.dump_python(data, exclude_unset=True)
 
 
-class BasePydanticClient(BaseClient):
+class BasePydanticClient(BaseClient[PydanticFactory]):
     @override
-    def init_markers_factories(self) -> MarkersFactorties:
+    def init_markers_factories(self) -> MarkersFactorties[PydanticFactory]:
         factory = PydanticFactory()
 
         return {
@@ -50,5 +50,5 @@ class BasePydanticClient(BaseClient):
         }
 
     @override
-    def init_response_factory(self) -> Factory:
+    def init_response_factory(self) -> PydanticFactory:
         return PydanticFactory()

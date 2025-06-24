@@ -3,7 +3,6 @@ from typing import override
 from adaptix import Retort, as_sentinel, name_mapping
 
 from retejo.integrations.common.base import BaseClient, MarkersFactorties
-from retejo.interfaces import Factory
 from retejo.markers.body import BodyMarker
 from retejo.markers.header import HeaderMarker
 from retejo.markers.omitted import Omitted
@@ -11,9 +10,9 @@ from retejo.markers.query_param import QueryParamMarker
 from retejo.markers.url_var import UrlVarMarker
 
 
-class BaseAdaptixClient(BaseClient):
+class BaseAdaptixClient(BaseClient[Retort]):
     @override
-    def init_markers_factories(self) -> MarkersFactorties:
+    def init_markers_factories(self) -> MarkersFactorties[Retort]:
         retort = Retort(
             recipe=[
                 as_sentinel(Omitted),
@@ -31,5 +30,5 @@ class BaseAdaptixClient(BaseClient):
         }
 
     @override
-    def init_response_factory(self) -> Factory:
+    def init_response_factory(self) -> Retort:
         return Retort()

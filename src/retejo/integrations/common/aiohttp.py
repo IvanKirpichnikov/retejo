@@ -9,7 +9,7 @@ from retejo.integrations.common.base import AsyncBaseClient
 from retejo.interfaces import Request, Response
 
 
-class AiohttpBaseClient(AsyncBaseClient):
+class AiohttpBaseClient(AsyncBaseClient[Any]):
     _session: ClientSession
 
     def __init__(

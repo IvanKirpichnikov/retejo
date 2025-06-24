@@ -11,7 +11,7 @@ from retejo.integrations.common.base import SyncBaseClient
 from retejo.interfaces import Request, Response
 
 
-class RequestsBaseClient(SyncBaseClient):
+class RequestsBaseClient(SyncBaseClient[Any]):
     _base_url: str
     _session: Session
 

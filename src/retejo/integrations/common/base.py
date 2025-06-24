@@ -22,7 +22,7 @@ from retejo.markers.url_var import UrlVarMarker
 from retejo.method import Method
 from retejo.request_context_builder import SimpleRequestContextBuilder
 
-type MarkersFactorties = MutableMapping[type[BaseMarker], Factory]
+type MarkersFactorties[F: Factory] = MutableMapping[type[BaseMarker], F]
 
 
 method_logger = getLogger("retejo.method")
@@ -30,10 +30,10 @@ request_logger = getLogger("retejo.request")
 response_logger = getLogger("retejo.response")
 
 
-class BaseClient(Protocol):
+class BaseClient[F: Factory](Protocol):
     _response_factory: Factory
     _request_context_builder: RequestContextBuilder
-    _markers_factories: MarkersFactorties
+    _markers_factories: MarkersFactorties[F]
 
     def __init__(self) -> None:
         self._markers_factories = self.init_markers_factories()
@@ -41,11 +41,11 @@ class BaseClient(Protocol):
         self._request_context_builder = self.init_request_context_builder()
 
     @abstractmethod
-    def init_markers_factories(self) -> MarkersFactorties:
+    def init_markers_factories(self) -> MarkersFactorties[F]:
         raise NotImplementedError
 
     @abstractmethod
-    def init_response_factory(self) -> Factory:
+    def init_response_factory(self) -> F:
         raise NotImplementedError
 
     def init_request_context_builder(self) -> RequestContextBuilder:
@@ -82,7 +82,7 @@ class BaseClient(Protocol):
         return self._response_factory.load(response, method_returning_tp)
 
 
-class SyncBaseClient(BaseClient, SyncClient):
+class SyncBaseClient[F: Factory](BaseClient[F], SyncClient):
     @override
     def _handle_response(self, response: Response) -> None:
         if response.status_code >= 400:
@@ -114,7 +114,7 @@ class SyncBaseClient(BaseClient, SyncClient):
         )
 
 
-class AsyncBaseClient(BaseClient, AsyncClient):
+class AsyncBaseClient[F: Factory](BaseClient[F], AsyncClient):
     @override
     async def _handle_response(self, response: Response) -> None:
         if response.status_code >= 400:

@@ -57,5 +57,5 @@ def main() -> None:
         print(client.upload_image(file=FileObj(open("sync.py", "rb"))))
 
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 main()

@@ -1,5 +1,6 @@
 from abc import abstractmethod
 from collections.abc import Mapping, MutableMapping
+from logging import getLogger
 from types import NoneType
 from typing import Any, Protocol, override
 
@@ -21,6 +22,11 @@ from retejo.method import Method
 from retejo.request_context_builder import SimpleRequestContextBuilder
 
 type MarkersFactorties = MutableMapping[type[BaseMarker], Factory]
+
+
+method_logger = getLogger("retejo.method")
+request_logger = getLogger("retejo.request")
+response_logger = getLogger("retejo.response")
 
 
 class BaseClient(Protocol):
@@ -92,8 +98,11 @@ class SyncBaseClient(BaseClient, SyncClient):
         self,
         method: Method[T],
     ) -> T:
+        method_logger.debug("Called %r", method)
         request = self._method_to_request(method)
+        request_logger.debug("Send %r", request)
         response = self.send_request(request)
+        response_logger.debug("Received %r", response)
 
         self._handle_response(response)
 
@@ -121,8 +130,11 @@ class AsyncBaseClient(BaseClient, AsyncClient):
         self,
         method: Method[T],
     ) -> T:
+        method_logger.debug("Called %s", method)
         request = self._method_to_request(method)
+        request_logger.debug("Send %s", request)
         response = await self.send_request(request)
+        response_logger.debug("Received %s", response)
 
         await self._handle_response(response)
 

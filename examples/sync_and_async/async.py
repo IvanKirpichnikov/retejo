@@ -58,6 +58,6 @@ async def main() -> None:
         print(await client.upload_image(file=FileObj(open("async.py", "rb"))))
 
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 asyncio.run(main())

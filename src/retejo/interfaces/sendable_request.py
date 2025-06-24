@@ -3,6 +3,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any, Protocol, runtime_checkable
 
+from retejo.file_obj import FileObj
 from retejo.interfaces.request_context_builder import RequestContext
 
 
@@ -14,6 +15,7 @@ class Request:
     body: Mapping[str, str] | None = None
     headers: Mapping[str, str] | None = None
     query_params: Mapping[str, str] | None = None
+    files: Mapping[str, FileObj] | None = None
 
 
 @dataclass(frozen=True, slots=True)

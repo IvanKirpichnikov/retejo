@@ -15,6 +15,7 @@ from retejo.interfaces import (
 )
 from retejo.markers.base import BaseMarker
 from retejo.markers.body import BodyMarker
+from retejo.markers.file import FileMarker
 from retejo.markers.header import HeaderMarker
 from retejo.markers.query_param import QueryParamMarker
 from retejo.markers.url_var import UrlVarMarker
@@ -66,6 +67,7 @@ class BaseClient(Protocol):
             body=request_context.get(BodyMarker),
             headers=request_context.get(HeaderMarker),
             query_params=request_context.get(QueryParamMarker),
+            files=request_context.get(FileMarker),
             context=request_context,
         )
 

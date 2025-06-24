@@ -19,17 +19,17 @@ def get_returning_tp(tp: Any) -> Any:
 @dataclass_transform(frozen_default=True)
 class MethodMetaClass(type):
     def __new__(cls, name: str, bases: tuple[type, ...], namespace: dict[str, Any]) -> Any:
-        klass: Any = type.__new__(cls, name, bases, namespace)
+        class_: Any = type.__new__(cls, name, bases, namespace)
 
-        if klass.__name__ == "Method":
-            return klass
+        if class_.__name__ == "Method":
+            return class_
 
-        klass = dataclass(frozen=True)(klass)
+        class_ = dataclass(frozen=True)(class_)
 
-        klass.__returning__ = get_returning_tp(klass)
-        klass.__context__ = create_method_context(klass)
+        class_.__returning__ = get_returning_tp(class_)
+        class_.__context__ = create_method_context(class_)
 
-        return klass
+        return class_
 
 
 class Method[T](metaclass=MethodMetaClass):

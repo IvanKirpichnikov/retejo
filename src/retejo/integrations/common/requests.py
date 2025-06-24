@@ -75,7 +75,7 @@ class RequestsBaseClient(SyncBaseClient):
         file_key: str,
         file: FileObj,
     ) -> tuple[str, str | IO[bytes], str]:
-        return (file.filename or file_key, file.contents, cast(str, file.content_type))
+        return (file.filename or file_key, file.contents, cast("str", file.content_type))
 
     @override
     def close(self) -> None:

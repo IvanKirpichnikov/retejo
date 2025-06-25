@@ -1,7 +1,7 @@
 import urllib.parse
 from collections.abc import Mapping
 from json import JSONDecodeError
-from typing import IO, Any, cast, override
+from typing import IO, Any, cast
 
 from requests import RequestException, Session
 
@@ -36,7 +36,6 @@ class RequestsBaseClient(SyncBaseClient[Any]):
         if cookies is not None:
             self._session.cookies.update(cookies)
 
-    @override
     def send_request(
         self,
         request: Request,
@@ -77,6 +76,5 @@ class RequestsBaseClient(SyncBaseClient[Any]):
     ) -> tuple[str, str | IO[bytes], str]:
         return (file.filename or file_key, file.contents, cast("str", file.content_type))
 
-    @override
     def close(self) -> None:
         self._session.close()

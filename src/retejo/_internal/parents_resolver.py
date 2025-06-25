@@ -5,7 +5,7 @@ from abc import ABC, ABCMeta
 from collections.abc import Iterable
 from enum import Enum
 from itertools import chain
-from typing import Final, Generic, Protocol
+from typing import Final, Generic, Protocol, TypeAlias
 
 from retejo._internal._adaptix.common import TypeHint
 from retejo._internal._adaptix.feature_requirement import (
@@ -39,7 +39,7 @@ IGNORE_TYPES: Final = (
     BaseException,
 )
 
-type TypeArgsTuple = tuple[TypeHint, ...]
+TypeArgsTuple: TypeAlias = tuple[TypeHint, ...]
 
 
 def is_ignored_type(origin_type: TypeHint) -> bool:

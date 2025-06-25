@@ -1,4 +1,4 @@
-from typing import Any, cast, override
+from typing import Any, cast
 
 from adaptix._internal.model_tools.definitions import NoDefault, OutputField
 from adaptix._internal.morphing.model.crown_definitions import (
@@ -26,14 +26,12 @@ from retejo.markers.omitted import is_omitted
 
 
 class OmitSievesMaker(BuiltinSievesMaker):
-    @override
     def _create_sieve(self, field: OutputField) -> Sieve:
         if is_omittable(field.type):  # type: ignore[redundant-expr]
             return cast("Sieve", lambda obj, value=None: not is_omitted(obj))
         else:
             return super()._create_sieve(field)  # type: ignore[unreachable]
 
-    @override
     def make_sieves(
         self,
         mediator: Mediator[Any],

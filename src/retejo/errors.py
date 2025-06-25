@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import override
 
 
 @dataclass
@@ -21,7 +20,6 @@ class ClientLibraryError(RetejoError):
 class ClientError(RetejoError, RuntimeError):
     status_code: int
 
-    @override
     def __str__(self) -> str:
         return f"Client error with {self.status_code!r} error code"
 
@@ -30,6 +28,5 @@ class ClientError(RetejoError, RuntimeError):
 class ServerError(RetejoError, RuntimeError):
     status_code: int
 
-    @override
     def __str__(self) -> str:
         return f"Server error with {self.status_code!r} error code"

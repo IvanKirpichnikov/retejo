@@ -1,8 +1,8 @@
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from collections.abc import Mapping, MutableMapping
 from logging import getLogger
 from types import NoneType
-from typing import Any, Protocol, override
+from typing import Any, Generic, TypeVar
 
 from retejo.errors import ClientError, ServerError
 from retejo.interfaces import (
@@ -22,7 +22,10 @@ from retejo.markers.url_var import UrlVarMarker
 from retejo.method import Method
 from retejo.request_context_builder import SimpleRequestContextBuilder
 
-type MarkersFactorties[F: Factory] = MutableMapping[type[BaseMarker], F]
+T = TypeVar("T")
+F = TypeVar("F", bound=Factory)
+
+MarkersFactorties = MutableMapping[type[BaseMarker], F]
 
 
 method_logger = getLogger("retejo.method")
@@ -30,10 +33,10 @@ request_logger = getLogger("retejo.request")
 response_logger = getLogger("retejo.response")
 
 
-class BaseClient[F: Factory](Protocol):
+class BaseClient(ABC, Generic[F]):
     _response_factory: Factory
-    _request_context_builder: RequestContextBuilder
     _markers_factories: MarkersFactorties[F]
+    _request_context_builder: RequestContextBuilder
 
     def __init__(self) -> None:
         self._markers_factories = self.init_markers_factories()
@@ -71,7 +74,7 @@ class BaseClient[F: Factory](Protocol):
             context=request_context,
         )
 
-    def _load_method_returning[T](
+    def _load_method_returning(
         self,
         response: Mapping[str, Any],
         method_returning_tp: type[T],
@@ -82,21 +85,18 @@ class BaseClient[F: Factory](Protocol):
         return self._response_factory.load(response, method_returning_tp)
 
 
-class SyncBaseClient[F: Factory](BaseClient[F], SyncClient):
-    @override
+class SyncBaseClient(BaseClient[F], SyncClient):
     def _handle_response(self, response: Response) -> None:
         if response.status_code >= 400:
             self._handle_error_response(response)
 
-    @override
     def _handle_error_response(self, response: Response) -> None:
         if 400 <= response.status_code < 500:
             raise ClientError(response.status_code)
         else:
             raise ServerError(response.status_code)
 
-    @override
-    def send_method[T](
+    def send_method(
         self,
         method: Method[T],
     ) -> T:
@@ -114,21 +114,18 @@ class SyncBaseClient[F: Factory](BaseClient[F], SyncClient):
         )
 
 
-class AsyncBaseClient[F: Factory](BaseClient[F], AsyncClient):
-    @override
+class AsyncBaseClient(BaseClient[F], AsyncClient):
     async def _handle_response(self, response: Response) -> None:
         if response.status_code >= 400:
             await self._handle_error_response(response)
 
-    @override
     async def _handle_error_response(self, response: Response) -> None:
         if 400 <= response.status_code < 500:
             raise ClientError(response.status_code)
         else:
             raise ServerError(response.status_code)
 
-    @override
-    async def send_method[T](
+    async def send_method(
         self,
         method: Method[T],
     ) -> T:

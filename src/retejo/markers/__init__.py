@@ -2,7 +2,16 @@ from .base import BaseMarker, is_marker
 from .body import Body, is_body
 from .file import File, is_file
 from .header import Header, is_header
-from .omitted import Omittable, Omitted, is_defined, is_not_omitted, is_omittable, is_omitted
+from .omitted import (
+    Omittable,
+    Omitted,
+    is_defined,
+    is_not_defined,
+    is_not_omittable,
+    is_not_omitted,
+    is_omittable,
+    is_omitted,
+)
 from .query_param import QueryParam, is_query_param
 from .url_var import UrlVar, is_url_var
 
@@ -20,6 +29,8 @@ __all__ = (
     "is_file",
     "is_header",
     "is_marker",
+    "is_not_defined",
+    "is_not_omittable",
     "is_not_omitted",
     "is_omittable",
     "is_omitted",

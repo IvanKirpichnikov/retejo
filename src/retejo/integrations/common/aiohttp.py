@@ -1,7 +1,7 @@
 import urllib.parse
 from collections.abc import Mapping
 from json import JSONDecodeError
-from typing import Any, override
+from typing import Any
 
 from aiohttp import ClientError, ClientSession, FormData
 
@@ -33,7 +33,6 @@ class AiohttpBaseClient(AsyncBaseClient[Any]):
         if cookies is not None:
             self._session.cookie_jar.update_cookies(cookies)
 
-    @override
     async def send_request(
         self,
         request: Request,
@@ -70,6 +69,5 @@ class AiohttpBaseClient(AsyncBaseClient[Any]):
                 status_code=response.status,
             )
 
-    @override
     async def close(self) -> None:
         await self._session.close()

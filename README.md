@@ -77,9 +77,9 @@ class Client(RequestsAdaptixClient):
     def __init__(self) -> None:
         super().__init__("https://jsonplaceholder.typicode.com/")
 
-    @override
-    def init_response_factory(self) -> Factory:
-        return Retort(
+    def init_response_factory(self) -> Retort:
+        factory = super().init_response_factory()
+        return factory.extend(
             recipe=[
                 # поля в ответе вида camelCase
                 # будут конвертированы в lower_case.
@@ -110,7 +110,7 @@ get_post = bind_method(GetPost)
 Эквивалентно следующему.
 
 ```python
-def get_post(self, id: int) -> Post:
+def get_post(self, id: UrlVar[int]) -> Post:
     return self.send_method(
         GetPost(
             id=id,
@@ -165,11 +165,15 @@ class Client(RequestsAdaptixClient):
     def __init__(self) -> None:
         super().__init__(base_url="https://jsonplaceholder.typicode.com/")
 
-    @override
-    def init_response_factory(self) -> Factory:
-        return Retort(
+    def init_response_factory(self) -> Retort:
+        factory = super().init_response_factory()
+        return factory.extend(
             recipe=[
-                name_mapping(name_style=NameStyle.CAMEL),
+                # поля в ответе вида camelCase
+                # будут конвертированы в lower_case.
+                name_mapping(
+                    name_style=NameStyle.CAMEL,
+                ),
             ]
         )
 
@@ -206,13 +210,17 @@ client.close()
         def __init__(self) -> None:
             super().__init__(base_url="https://jsonplaceholder.typicode.com/")
 
-    @override
-    def init_response_factory(self) -> Factory:
-        return Retort(
-            recipe=[
-                name_mapping(name_style=NameStyle.CAMEL),
-            ]
-        )
+        def init_response_factory(self) -> Retort:
+            factory = super().init_response_factory()
+            return factory.extend(
+                recipe=[
+                    # поля в ответе вида camelCase
+                    # будут конвертированы в lower_case.
+                    name_mapping(
+                        name_style=NameStyle.CAMEL,
+                    ),
+                ]
+            )
 
         get_post = bind_method(GetPost)
         create_post = bind_method(CreatePost)
@@ -264,7 +272,6 @@ class Client(RequestsAdaptixClient):
     def __init__(self) -> None:
         super().__init__("")
 
-    @override
     def init_markers_factories(self) -> MarkersFactorties:
         factories = super().init_markers_factories()
         factories[HeaderMarker] =  Retort(

@@ -1,5 +1,5 @@
 from collections.abc import Mapping
-from typing import Any, override
+from typing import Any
 
 from retejo.interfaces import (
     Factory,
@@ -16,7 +16,6 @@ class SimpleRequestContextBuilder(RequestContextBuilder):
     def __init__(self, markers_factories: Mapping[type[BaseMarker], Factory]) -> None:
         self._markers_factories = markers_factories
 
-    @override
     def build(self, method: Method[Any]) -> RequestContext:
         context = method.__context__
 

@@ -1,12 +1,15 @@
 import inspect
 from collections.abc import Awaitable, Callable
-from typing import Any, NoReturn, cast, overload
+from typing import Any, Generic, NoReturn, ParamSpec, TypeVar, cast, overload
 
 from retejo.interfaces import AsyncSendableMethod, SyncSendableMethod
 from retejo.method import Method
 
+T = TypeVar("T")
+P = ParamSpec("P")
 
-class _BindMethod[**P, T]:
+
+class _BindMethod(Generic[P, T]):
     def __init__(
         self,
         method: Callable[P, Method[T]],
@@ -44,5 +47,5 @@ class _BindMethod[**P, T]:
             return sync_wrapper
 
 
-def bind_method[**P, T](method: Callable[P, Method[T]]) -> _BindMethod[P, T]:
+def bind_method(method: Callable[P, Method[T]]) -> _BindMethod[P, T]:
     return _BindMethod(method)

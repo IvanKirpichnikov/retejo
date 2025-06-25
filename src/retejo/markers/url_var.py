@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Annotated, Any
+from typing import Annotated, TypeVar
 
 from retejo.markers.base import BaseMarker, is_marker_factory
 
@@ -7,13 +7,6 @@ class UrlVarMarker(BaseMarker):
     pass
 
 
-if TYPE_CHECKING:
-    type UrlVar[T] = T
-else:
-
-    class UrlVar:
-        def __class_getitem__(cls, item: Any) -> Any:
-            return Annotated[item, UrlVarMarker()]
-
-
+T = TypeVar("T")
+UrlVar = Annotated[T, UrlVarMarker()]
 is_url_var = is_marker_factory(UrlVarMarker)

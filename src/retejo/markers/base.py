@@ -1,5 +1,5 @@
 from collections.abc import Callable
-from typing import Annotated, Any, TypeGuard, get_origin
+from typing import Annotated, Any, TypeGuard, TypeVar, get_origin
 
 from retejo._internal.singleton import Singleton
 
@@ -8,8 +8,11 @@ class BaseMarker(metaclass=Singleton):
     pass
 
 
-def is_marker_factory[T: BaseMarker](marker: type[T]) -> Callable[[Any], TypeGuard[T]]:
-    def wrapper(obj: Any) -> TypeGuard[T]:
+T_co = TypeVar("T_co", bound=BaseMarker, covariant=True)
+
+
+def is_marker_factory(marker: type[T_co]) -> Callable[[Any], TypeGuard[T_co]]:
+    def wrapper(obj: Any) -> TypeGuard[T_co]:
         if get_origin(obj) is Annotated:
             return isinstance(obj.__metadata__[0], marker)
         return False

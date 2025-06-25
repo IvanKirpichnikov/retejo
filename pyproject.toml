@@ -17,17 +17,20 @@ authors = [
     { name = "Ivan Kirpichnikov", email = "mmssvvvv570@gmail.com" }
 ]
 license = { text = "MIT" }
-requires-python = ">=3.12"
+requires-python = ">=3.10"
+dependencies = ["typing_extensions>=4.10.0,<5.0.0"]
 
 classifiers = [
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Operating System :: OS Independent",
-    "Topic :: Software Development :: Libraries :: Application Frameworks",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: Software Development :: Libraries",
     "Topic :: Software Development",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
     "Topic :: System :: Networking",
     "Topic :: System :: Distributed Computing",
     "Typing :: Typed",
@@ -39,8 +42,8 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-requests = [ "requests>=2.27.0,<3.0.0" ]
-aiohttp = [ "aiohttp~=3.11.0" ]
+requests = [ "requests>=2.27.0, <3.0.0" ]
+aiohttp = [ "aiohttp>=3.10.0, <4.0.0" ]
 adaptix = [ "adaptix>=3.0.0b1, <4.0.0" ]
 pydantic = [ "pydantic~=2.11.7"]
 
@@ -53,9 +56,8 @@ types = [
 ]
 lint = [
     "retejo[types]",
-    "mypy==1.16.0",
+    "mypy==1.16.1",
     "ruff==0.11.13",
-    "basedmypy==2.10.0",
 ]
 tests = [
     "pytest==8.4.1",
@@ -78,8 +80,7 @@ exclude = [
     "src/retejo/integrations/adaptix/_omit_provider.py",
 ]
 strict = true
-python_version = "3.12"
-enable_error_code = "explicit-override"
+python_version = "3.10"
 sqlite_cache = true
 
 disallow_any_decorated = false
@@ -97,7 +98,7 @@ include = [
 exclude = ["src/retejo/_internal/_adaptix"]
 fix = true
 line-length = 99
-target-version = "py312"
+target-version = "py310"
 
 [tool.ruff.lint]
 select = [
@@ -169,7 +170,7 @@ parallel = true
 branch = true
 concurrency = ["multiprocessing", "thread"]
 source = ["tests"]
-omit = ["**/__init__.py", "src/retejo/_internal/**"]
+omit = ["**/__init__.py", "src/retejo/_internal/**", "src/retejo/integrations/adaptix/_omit_provider.py"]
 
 [tool.coverage.report]
 show_missing = true

@@ -44,7 +44,7 @@ jobs:
 
     - name: Run mypy
       run: |
-        mypy --config-file pyproject.toml .
+        mypy --config-file pyproject.toml
 
     - name: Run tests
       run: |

@@ -1,5 +1,6 @@
+import inspect
 from collections.abc import Awaitable, Callable
-from typing import Any, NoReturn, overload
+from typing import Any, NoReturn, cast, overload
 
 from retejo.interfaces import AsyncSendableMethod, SyncSendableMethod
 from retejo.method import Method
@@ -24,21 +25,23 @@ class _BindMethod[**P, T]:
     def __get__(self, obj: Any, objtype: Any = None) -> NoReturn: ...
 
     def __get__(self, obj: Any, objtype: Any = None) -> Any:
-        if isinstance(obj, SyncSendableMethod):
+        if not isinstance(obj, SyncSendableMethod | AsyncSendableMethod):
+            raise RuntimeError("method_call use is only Session subclasses")
 
-            def sync_wrapper(*args: P.args, **kwargs: P.kwargs) -> T:
-                return obj.send_method(self._method(*args, **kwargs))
-
-            return sync_wrapper
-
-        if isinstance(obj, AsyncSendableMethod):
+        if inspect.iscoroutinefunction(obj.send_method):
+            async_client = cast("AsyncSendableMethod", obj)
 
             async def async_wrapper(*args: P.args, **kwargs: P.kwargs) -> T:
-                return await obj.send_method(self._method(*args, **kwargs))
+                return await async_client.send_method(self._method(*args, **kwargs))
 
             return async_wrapper
+        else:
+            sync_client = cast("SyncSendableMethod", obj)
 
-        raise RuntimeError("method_call use is only Session subclasses")
+            def sync_wrapper(*args: P.args, **kwargs: P.kwargs) -> T:
+                return sync_client.send_method(self._method(*args, **kwargs))
+
+            return sync_wrapper
 
 
 def bind_method[**P, T](method: Callable[P, Method[T]]) -> _BindMethod[P, T]:

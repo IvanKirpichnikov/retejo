@@ -1,5 +1,10 @@
 # Retejo
 
+[![PyPI version](https://badge.fury.io/py/retejo.svg)](https://pypi.python.org/pypi/retejo)
+[![Supported versions](https://img.shields.io/pypi/pyversions/retejo.svg)](https://pypi.python.org/pypi/retejo)
+[![License](https://img.shields.io/github/license/IvanKirpichnikov/retejo)](https://github.com/IvanKirpichnikov/retejo/blob/master/LICENSE)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/IvanKirpichnikov/retejo/setup.yml)](https://github.com/IvanKirpichnikov/retejo/actions)
+
 ## Функции
 
  - **Валидация с помощью adaptix(и не только):** Используйте библиотеку **adaptix** для парсинга ответов. Вы можете с легкостью заменить **adaptix** на **pydantic**.

@@ -28,10 +28,10 @@ from retejo.markers.omitted import is_omitted
 class OmitSievesMaker(BuiltinSievesMaker):
     @override
     def _create_sieve(self, field: OutputField) -> Sieve:
-        if is_omittable(field.type):  # type: ignore[redundant-expr]
+        if is_omittable(field.type):
             return cast("Sieve", lambda obj, value=None: not is_omitted(obj))
         else:
-            return super()._create_sieve(field)  # type: ignore[unreachable]
+            return super()._create_sieve(field)
 
     @override
     def make_sieves(
@@ -45,8 +45,8 @@ class OmitSievesMaker(BuiltinSievesMaker):
         for path, leaf in paths_to_leaves.items():
             if isinstance(leaf, OutFieldCrown):
                 field = request.shape.fields_dict[leaf.id]
-                if is_omittable(field.type) or (  # type: ignore[redundant-expr]
-                    field.default != NoDefault()  # type: ignore[unreachable]
+                if is_omittable(field.type) or (
+                    field.default != NoDefault()
                     and apply_lsc(
                         mediator,
                         request,

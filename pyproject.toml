@@ -40,7 +40,7 @@ classifiers = [
 
 [project.optional-dependencies]
 requests = [ "requests>=2.27.0,<3.0.0" ]
-aiohttp = [ "aiohttp>=3.11.0,<4.0.0" ]
+aiohttp = [ "aiohttp~=3.11.0" ]
 adaptix = [ "adaptix>=3.0.0b1, <4.0.0" ]
 integrations = [
     "retejo[aiohttp, requests]",
@@ -54,12 +54,20 @@ lint = [
     "ruff==0.11.13",
     "basedmypy==2.10.0",
 ]
+tests = [
+    "pytest==8.4.1",
+    "pytest-asyncio==1.0.0",
+    "pytest-xdist==3.7.0",
+    "coverage==7.9.1",
+    "aioresponses==0.7.8",
+    "requests_mock==1.12.1",
+]
 dev = [
     "retejo[lint, types, integrations]",
 ]
 
 [tool.mypy]
-files = ["src"]
+files = ["src", "tests"]
 exclude = [
     "src/retejo/_internal/_adaptix/",
     "src/retejo/_internal/parents_resolver.py"
@@ -78,6 +86,7 @@ disallow_untyped_calls = false
 [tool.ruff]
 include = [
     "src/retejo/**/*.py",
+    "tests/**/*.py",
     "pyproject.toml"
 ]
 exclude = ["src/retejo/_internal/_adaptix"]
@@ -144,3 +153,33 @@ quote-style = "double"
 indent-style = "space"
 skip-magic-trailing-comma = false
 line-ending = "lf"
+
+[tool.pytest.ini_options]
+addopts = "--cov src -n3"
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+
+[tool.coverage.run]
+parallel = true
+branch = true
+concurrency = ["multiprocessing", "thread"]
+source = ["tests"]
+omit = ["**/__init__.py", "src/retejo/_internal/**"]
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true
+exclude_also = [
+    "if __name__ == .__main__.:",
+    "def __repr__",
+    "lambda: None",
+    "from .*",
+    "import .*",
+    '@(abc\.)?abstractmethod',
+    "raise NotImplementedError",
+    'raise AssertionError',
+    'raise RuntimeError',
+    'logger\..*',
+    "pass",
+    '\.\.\.',
+]

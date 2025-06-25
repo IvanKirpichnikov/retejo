@@ -74,7 +74,8 @@ dev = [
 files = ["src", "tests"]
 exclude = [
     "src/retejo/_internal/_adaptix/*",
-    "src/retejo/_internal/parents_resolver.py"
+    "src/retejo/_internal/parents_resolver.py",
+    "src/retejo/integrations/adaptix/_omit_provider.py",
 ]
 strict = true
 python_version = "3.12"

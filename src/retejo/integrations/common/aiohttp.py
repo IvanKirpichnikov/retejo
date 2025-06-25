@@ -1,3 +1,4 @@
+import urllib.parse
 from collections.abc import Mapping
 from json import JSONDecodeError
 from typing import Any, override
@@ -20,9 +21,10 @@ class AiohttpBaseClient(AsyncBaseClient[Any]):
         headers: Mapping[str, str] | None = None,
     ) -> None:
         super().__init__()
+        self._base_url = base_url
 
         if session is None:
-            self._session = ClientSession(base_url)
+            self._session = ClientSession()
         else:
             self._session = session
 
@@ -50,7 +52,7 @@ class AiohttpBaseClient(AsyncBaseClient[Any]):
 
         async with self._session.request(
             method=request.http_method,
-            url=request.url,
+            url=urllib.parse.urljoin(self._base_url, request.url),
             params=request.query_params,
             json=request.body,
             headers=request.headers,

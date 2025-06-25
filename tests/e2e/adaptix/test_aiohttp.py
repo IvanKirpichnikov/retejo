@@ -2,17 +2,10 @@ from typing import override
 
 from adaptix import NameStyle, Retort, name_mapping
 
-from examples.sync_and_async.methods import (
-    CreatePost,
-    DeletePost,
-    GetPost,
-    ListPosts,
-    PostId,
-    UploadImage,
-)
 from retejo.bind_method import bind_method
 from retejo.file_obj import FileObj
 from retejo.integrations.adaptix.aiohttp import AiohttpAdaptixClient
+from tests.e2e.methods import CreatePost, DeletePost, GetPost, ListPosts, PostId, UploadImage
 
 
 class AsyncClient(AiohttpAdaptixClient):

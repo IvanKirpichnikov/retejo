@@ -1,10 +1,9 @@
 from collections import defaultdict
 from collections.abc import Mapping, MutableMapping, Sequence
 from dataclasses import Field, dataclass, fields as get_fields
-from typing import TYPE_CHECKING, Any, NotRequired, TypedDict
+from typing import TYPE_CHECKING, Any, TypedDict
 
 from retejo.markers.base import BaseMarker, get_marker_type
-from retejo.markers.omitted import is_omittable
 
 if TYPE_CHECKING:
     from retejo.method.method import Method
@@ -58,9 +57,6 @@ def make_typed_dict_for_marker(
 
     fields_tp: MutableMapping[str, Any] = {}
     for field in fields:
-        if is_omittable(field.type):
-            fields_tp[field.name] = NotRequired[field.type]
-        else:
-            fields_tp[field.name] = field.type
+        fields_tp[field.name] = field.type
 
-    return TypedDict(name, fields_tp)  # type: ignore[operator]
+    return TypedDict(name, fields_tp, total=False)  # type: ignore[operator]

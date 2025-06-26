@@ -1,13 +1,15 @@
 from abc import abstractmethod
-from typing import Protocol, runtime_checkable
+from typing import Protocol, TypeVar, runtime_checkable
 
 from retejo.method import Method
+
+T = TypeVar("T")
 
 
 @runtime_checkable
 class AsyncSendableMethod(Protocol):
     @abstractmethod
-    async def send_method[T](
+    async def send_method(
         self,
         method: Method[T],
     ) -> T:
@@ -17,7 +19,7 @@ class AsyncSendableMethod(Protocol):
 @runtime_checkable
 class SyncSendableMethod(Protocol):
     @abstractmethod
-    def send_method[T](
+    def send_method(
         self,
         method: Method[T],
     ) -> T:

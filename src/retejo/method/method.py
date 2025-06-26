@@ -1,6 +1,8 @@
 from abc import abstractmethod
 from dataclasses import dataclass
-from typing import Any, ClassVar, dataclass_transform, get_args, get_origin
+from typing import Any, ClassVar, Generic, TypeVar, get_args, get_origin
+
+from typing_extensions import dataclass_transform
 
 from retejo._internal.parents_resolver import ParentsResolver
 from retejo.method.context import MethodContext, create_method_context
@@ -32,7 +34,10 @@ class MethodMetaClass(type):
         return class_
 
 
-class Method[T](metaclass=MethodMetaClass):
+T = TypeVar("T")
+
+
+class Method(Generic[T], metaclass=MethodMetaClass):
     @property
     @abstractmethod
     def __url__(self) -> str:

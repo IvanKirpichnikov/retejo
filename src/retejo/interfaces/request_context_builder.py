@@ -1,11 +1,11 @@
 from abc import abstractmethod
 from collections.abc import Mapping
-from typing import Any, Protocol, runtime_checkable
+from typing import Any, Protocol, TypeAlias, runtime_checkable
 
 from retejo.markers.base import BaseMarker
 from retejo.method import Method
 
-type RequestContext = Mapping[type[BaseMarker], Mapping[str, Any]]
+RequestContext: TypeAlias = Mapping[type[BaseMarker], Mapping[str, Any]]
 
 
 @runtime_checkable

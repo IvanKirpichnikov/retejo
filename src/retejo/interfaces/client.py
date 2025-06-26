@@ -1,6 +1,8 @@
 from abc import abstractmethod
 from types import TracebackType
-from typing import Protocol, Self, runtime_checkable
+from typing import Protocol, runtime_checkable
+
+from typing_extensions import Self
 
 from retejo.interfaces.sendable_method import AsyncSendableMethod, SyncSendableMethod
 from retejo.interfaces.sendable_request import (

@@ -1,6 +1,5 @@
 import asyncio
 import logging
-from typing import override
 
 from adaptix import NameStyle, Retort, name_mapping
 from methods import (
@@ -21,7 +20,6 @@ class AsyncClient(AiohttpAdaptixClient):
     def __init__(self) -> None:
         super().__init__("https://jsonplaceholder.typicode.com/")
 
-    @override
     def init_response_factory(self) -> Retort:
         result = super().init_response_factory()
         return result.extend(

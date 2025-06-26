@@ -1,5 +1,5 @@
 from collections.abc import MutableMapping
-from typing import Any, override
+from typing import Any
 
 from pydantic import TypeAdapter
 
@@ -26,19 +26,16 @@ class PydanticFactory(Factory):
         self._cache_type_adapters[tp] = type_adapter
         return type_adapter
 
-    @override
     def load(self, data: Any, tp: Any, /) -> Any:
         type_adapter = self._get_type_adapter(tp)
         return type_adapter.validate_python(data)
 
-    @override
     def dump(self, data: Any, tp: Any | None = None, /) -> Any:
         type_adapter = self._get_type_adapter(tp)
         return type_adapter.dump_python(data, exclude_unset=True)
 
 
 class BasePydanticClient(BaseClient[PydanticFactory]):
-    @override
     def init_markers_factories(self) -> MarkersFactorties[PydanticFactory]:
         factory = PydanticFactory()
 
@@ -49,6 +46,5 @@ class BasePydanticClient(BaseClient[PydanticFactory]):
             QueryParamMarker: factory,
         }
 
-    @override
     def init_response_factory(self) -> PydanticFactory:
         return PydanticFactory()

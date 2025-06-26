@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+    <url>
+        <loc>None./</loc>
+        <lastmod>2025-06-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ru" href="None"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/"/>
+    </url>
+    <url>
+        <loc>Nonecontribution/</loc>
+        <lastmod>2025-06-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ru" href="Nonecontribution/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/contribution/"/>
+    </url>
+    <url>
+        <loc>Noneintegrations/</loc>
+        <lastmod>2025-06-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ru" href="Noneintegrations/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/integrations/"/>
+    </url>
+    <url>
+        <loc>Noneintegrations/adaptix/</loc>
+        <lastmod>2025-06-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ru" href="Noneintegrations/adaptix/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/integrations/adaptix/"/>
+    </url>
+    <url>
+        <loc>Noneintegrations/aiohttp/</loc>
+        <lastmod>2025-06-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ru" href="Noneintegrations/aiohttp/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/integrations/aiohttp/"/>
+    </url>
+    <url>
+        <loc>Noneintegrations/httpx/</loc>
+        <lastmod>2025-06-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ru" href="Noneintegrations/httpx/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/integrations/httpx/"/>
+    </url>
+    <url>
+        <loc>Noneintegrations/pydantic/</loc>
+        <lastmod>2025-06-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ru" href="Noneintegrations/pydantic/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/integrations/pydantic/"/>
+    </url>
+    <url>
+        <loc>Noneintegrations/requests/</loc>
+        <lastmod>2025-06-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ru" href="Noneintegrations/requests/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/integrations/requests/"/>
+    </url>
+    <url>
+        <loc>Nonetutorial/</loc>
+        <lastmod>2025-06-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ru" href="Nonetutorial/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/tutorial/"/>
+    </url>
+    <url>
+        <loc>Nonetutorial/client/</loc>
+        <lastmod>2025-06-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ru" href="Nonetutorial/client/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/tutorial/client/"/>
+    </url>
+    <url>
+        <loc>Nonetutorial/method/</loc>
+        <lastmod>2025-06-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ru" href="Nonetutorial/method/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/tutorial/method/"/>
+    </url>
+    <url>
+        <loc>Noneen/</loc>
+        <lastmod>2025-06-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="None"/>
+    </url>
+    <url>
+        <loc>Noneen/contribution/</loc>
+        <lastmod>2025-06-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/contribution/"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="Nonecontribution/"/>
+    </url>
+    <url>
+        <loc>Noneen/integrations/</loc>
+        <lastmod>2025-06-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/integrations/"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="Noneintegrations/"/>
+    </url>
+    <url>
+        <loc>Noneen/integrations/adaptix/</loc>
+        <lastmod>2025-06-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/integrations/adaptix/"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="Noneintegrations/adaptix/"/>
+    </url>
+    <url>
+        <loc>Noneen/integrations/aiohttp/</loc>
+        <lastmod>2025-06-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/integrations/aiohttp/"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="Noneintegrations/aiohttp/"/>
+    </url>
+    <url>
+        <loc>Noneen/integrations/httpx/</loc>
+        <lastmod>2025-06-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/integrations/httpx/"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="Noneintegrations/httpx/"/>
+    </url>
+    <url>
+        <loc>Noneen/integrations/pydantic/</loc>
+        <lastmod>2025-06-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/integrations/pydantic/"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="Noneintegrations/pydantic/"/>
+    </url>
+    <url>
+        <loc>Noneen/integrations/requests/</loc>
+        <lastmod>2025-06-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/integrations/requests/"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="Noneintegrations/requests/"/>
+    </url>
+    <url>
+        <loc>Noneen/tutorial/</loc>
+        <lastmod>2025-06-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/tutorial/"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="Nonetutorial/"/>
+    </url>
+    <url>
+        <loc>Noneen/tutorial/client/</loc>
+        <lastmod>2025-06-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/tutorial/client/"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="Nonetutorial/client/"/>
+    </url>
+    <url>
+        <loc>Noneen/tutorial/method/</loc>
+        <lastmod>2025-06-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="Noneen/tutorial/method/"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="Nonetutorial/method/"/>
+    </url>
+</urlset>

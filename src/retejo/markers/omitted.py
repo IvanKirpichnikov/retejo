@@ -2,8 +2,10 @@ import types
 import typing
 from typing import Annotated, Any, TypeAlias, TypeGuard, TypeVar, get_args, get_origin
 
+from retejo._internal.singleton import Singleton
 
-class Omitted:
+
+class Omitted(metaclass=Singleton):
     def __bool__(self) -> bool | None:
         return False
 

@@ -21,11 +21,20 @@
 ---
 
 ## Установка
-```bash
-pip install retejo[requests, adaptix] # или pydantic
-pip install retejo[aiohttp, adaptix] # или pydantic
-pip install retejo[httpx, adaptix] # или pydantic
-```
+
+=== "adaptix"
+    ```bash
+    pip install retejo[requests, adaptix]
+    pip install retejo[aiohttp, adaptix]
+    pip install retejo[httpx, adaptix]
+    ```
+
+=== "pydantic"
+    ```bash
+    pip install retejo[requests, pydantic]
+    pip install retejo[aiohttp, pydantic]
+    pip install retejo[httpx, pydantic]
+    ```
 
 ---
 
@@ -49,20 +58,42 @@ class GetUser(Method[User]):
 
 Любой метод можно **переиспользовать** с любым клиентом, ведь метод не привязан к ним
 
-```py
-class RequestsClient(RequestsAdaptixClient):
-    def __init__(self) -> None:
-        super().__init__("https://web.server.com/api")
+=== "requests"
+    ```py
+    class RequestsClient(RequestsAdaptixClient):
+        def __init__(self) -> None:
+            super().__init__("https://web.server.com/api")
 
-    get_user = bind_method(GetUser)
+        get_user = bind_method(GetUser)
+    ```
 
+=== "aiohttp"
+    ```py
+    class AiohttpClient(AiohttpAdaptixClient):
+        def __init__(self) -> None:
+            super().__init__("https://web.server.com/api")
 
-class AiohttpClient(AiohttpAdaptixClient):
-    def __init__(self) -> None:
-        super().__init__("https://web.server.com/api")
+        get_user = bind_method(GetUser)
+    ```
 
-    get_user = bind_method(GetUser)
-```
+=== "httpx (sync)"
+    ```py
+    class HttpxClient(HttpxAdaptixSyncClient):
+        def __init__(self) -> None:
+            super().__init__("https://web.server.com/api")
+
+        get_user = bind_method(GetUser)
+    ```
+
+=== "httpx (async)"
+    ```py
+    class HttpxClient(HttpxAdaptixAsyncClient):
+        def __init__(self) -> None:
+            super().__init__("https://web.server.com/api")
+
+        get_user = bind_method(GetUser)
+    ```
+
 
 ---
 
@@ -109,50 +140,149 @@ class CreatePost(Method[PostId]):
 
 ### 3. Создание клиента и переопределене логики парсинга ответа
 
-```python
-class JSONPlaceholderClient(RequestsAdaptixClient):
-    def __init__(self):
-        super().__init__("https://jsonplaceholder.typicode.com/")
+=== "requests"
+    ```python
+    class JSONPlaceholderClient(RequestsAdaptixClient):
+        def __init__(self):
+            super().__init__("https://jsonplaceholder.typicode.com/")
 
-    def init_response_factory(self) -> Retort:
-        return super().init_response_factory().extend(
-            recipe=[
-                # camelCase -> lower_case
-                name_mapping(name_style=NameStyle.CAMEL)
-            ]
-        )
+        def init_response_factory(self) -> Retort:
+            return super().init_response_factory().extend(
+                recipe=[
+                    # camelCase -> lower_case
+                    name_mapping(name_style=NameStyle.CAMEL)
+                ]
+            )
 
+        get_post = bind_method(GetPost)
+        create_post = bind_method(CreatePost)
+    ```
+
+=== "aiohttp"
+    ```python
+    class JSONPlaceholderClient(AiohttpAdaptixClient):
+        def __init__(self):
+            super().__init__("https://jsonplaceholder.typicode.com/")
+
+        def init_response_factory(self) -> Retort:
+            return super().init_response_factory().extend(
+                recipe=[
+                    # camelCase -> lower_case
+                    name_mapping(name_style=NameStyle.CAMEL)
+                ]
+            )
+
+        get_post = bind_method(GetPost)
+        create_post = bind_method(CreatePost)
+    ```
+
+=== "httpx (sync)"
+    ```python
+    class JSONPlaceholderClient(HttpxAdaptixSyncClient):
+        def __init__(self):
+            super().__init__("https://jsonplaceholder.typicode.com/")
+
+        def init_response_factory(self) -> Retort:
+            return super().init_response_factory().extend(
+                recipe=[
+                    # camelCase -> lower_case
+                    name_mapping(name_style=NameStyle.CAMEL)
+                ]
+            )
+
+        get_post = bind_method(GetPost)
+        create_post = bind_method(CreatePost)
+    ```
+
+=== "httpx (async)"
+    ```python
+    class JSONPlaceholderClient(HttpxAdaptixAsyncClient):
+        def __init__(self):
+            super().__init__("https://jsonplaceholder.typicode.com/")
+
+        def init_response_factory(self) -> Retort:
+            return super().init_response_factory().extend(
+                recipe=[
+                    # camelCase -> lower_case
+                    name_mapping(name_style=NameStyle.CAMEL)
+                ]
+            )
+
+        get_post = bind_method(GetPost)
+        create_post = bind_method(CreatePost)
+    ```
+
+!!! tip
+    Возможно, вы подумаете, что использование `bind_method` ломает типизиацию, но это не так.
+
+    ```py
     get_post = bind_method(GetPost)
-    create_post = bind_method(CreatePost)
-```
+    ```
 
-Возможно, вы подумаете, что использование `bind_method` ломает типизиацию, но это не так.
+    Полностью экваивалентно
 
-```py
-get_post = bind_method(GetPost)
-```
-
-Полностью экваивалентно
-
-```py
-(async) def get_post(self, *, id: UrlVar[int]) -> Post:
-    return await self.send_method(GetPost(id=id))
-```
+    ```py
+    (async) def get_post(self, *, id: UrlVar[int]) -> Post:
+        return await self.send_method(GetPost(id=id))
+    ```
 
 ### 4. Использование клиента
 
-```python
-with JSONPlaceholderClient() as client:
-    # Создание поста
-    new_post = client.create_post(
-        user_id=1,
-        title="Hello Retejo",
-        body="This is a test post"
-    )
+=== "requests"
+    ```python
+    with JSONPlaceholderClient() as client:
+        # Создание поста
+        new_post = client.create_post(
+            user_id=1,
+            title="Hello Retejo",
+            body="This is a test post"
+        )
 
-    # Получение поста
-    post = client.get_post(id=new_post.id)
-```
+        # Получение поста
+        post = client.get_post(id=new_post.id)
+    ```
+
+=== "aiohttp"
+    ```python
+    async with JSONPlaceholderClient() as client:
+        # Создание поста
+        new_post = await client.create_post(
+            user_id=1,
+            title="Hello Retejo",
+            body="This is a test post"
+        )
+
+        # Получение поста
+        post = await client.get_post(id=new_post.id)
+    ```
+
+=== "httpx (sync)"
+    ```python
+    with JSONPlaceholderClient() as client:
+        # Создание поста
+        new_post = client.create_post(
+            user_id=1,
+            title="Hello Retejo",
+            body="This is a test post"
+        )
+
+        # Получение поста
+        post = client.get_post(id=new_post.id)
+    ```
+
+=== "httpx (async)"
+    ```python
+    async with JSONPlaceholderClient() as client:
+        # Создание поста
+        new_post = await client.create_post(
+            user_id=1,
+            title="Hello Retejo",
+            body="This is a test post"
+        )
+
+        # Получение поста
+        post = await client.get_post(id=new_post.id)
+    ```
 
 ---
 

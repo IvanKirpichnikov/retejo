@@ -11,7 +11,7 @@ from methods import (
     UploadImage,
 )
 
-from retejo.bind_method import bind_method
+from retejo import bind_method
 from retejo.file_obj import FileObj
 from retejo.integrations.adaptix.aiohttp import AiohttpAdaptixClient
 

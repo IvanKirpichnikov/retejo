@@ -26,4 +26,9 @@ class BaseAdaptixClient(BaseClient[Retort]):
         }
 
     def init_response_factory(self) -> Retort:
-        return Retort()
+        return Retort(
+            recipe=[
+                as_sentinel(Omitted),
+                OmitOmittedFieldProvider(),
+            ],
+        )

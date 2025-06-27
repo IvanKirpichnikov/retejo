@@ -3,7 +3,7 @@ from collections.abc import Mapping, MutableMapping, Sequence
 from dataclasses import Field, dataclass, fields as get_fields
 from typing import TYPE_CHECKING, Any, TypedDict
 
-from retejo.markers.base import BaseMarker, get_marker_type
+from retejo.markers.base import BaseMarker, get_markers, get_value_marker
 
 if TYPE_CHECKING:
     from retejo.method.method import Method
@@ -38,9 +38,10 @@ def get_marker_fields(
     result = defaultdict(list)
 
     for field in fields:
-        marker_tp = get_marker_type(field.type)
-        if marker_tp is not None:
-            result[marker_tp].append(field)
+        markers = get_markers(field.type)
+        if markers is not None:
+            for marker in markers:
+                result[type(marker)].append(field)
 
     return result
 
@@ -57,6 +58,6 @@ def make_typed_dict_for_marker(
 
     fields_tp: MutableMapping[str, Any] = {}
     for field in fields:
-        fields_tp[field.name] = field.type
+        fields_tp[field.name] = get_value_marker(field.type)
 
     return TypedDict(name, fields_tp, total=False)  # type: ignore[operator]

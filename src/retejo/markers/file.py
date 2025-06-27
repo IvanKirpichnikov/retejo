@@ -1,6 +1,6 @@
-from typing import Annotated, TypeVar
+from typing import TYPE_CHECKING, Annotated, TypeAlias, TypeVar
 
-from retejo.markers.base import BaseMarker, is_marker_factory
+from retejo.markers.base import BaseMarker, get_value_marker
 
 
 class FileMarker(BaseMarker):
@@ -8,5 +8,10 @@ class FileMarker(BaseMarker):
 
 
 T = TypeVar("T")
-File = Annotated[T, FileMarker()]
-is_file = is_marker_factory(FileMarker)
+if TYPE_CHECKING:
+    File: TypeAlias = Annotated[T, FileMarker(T)]
+else:
+
+    class File:
+        def __class_getitem__(cls, tp: T) -> T:
+            return Annotated[tp, FileMarker(get_value_marker(tp))]

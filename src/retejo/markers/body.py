@@ -1,6 +1,6 @@
-from typing import Annotated, TypeVar
+from typing import TYPE_CHECKING, Annotated, TypeAlias, TypeVar
 
-from retejo.markers.base import BaseMarker, is_marker_factory
+from retejo.markers.base import BaseMarker, get_value_marker
 
 
 class BodyMarker(BaseMarker):
@@ -8,5 +8,11 @@ class BodyMarker(BaseMarker):
 
 
 T = TypeVar("T")
-Body = Annotated[T, BodyMarker()]
-is_body = is_marker_factory(BodyMarker)
+
+if TYPE_CHECKING:
+    Body: TypeAlias = Annotated[T, BodyMarker(T)]
+else:
+
+    class Body:
+        def __class_getitem__(cls, tp: T) -> T:
+            return Annotated[tp, BodyMarker(get_value_marker(tp))]

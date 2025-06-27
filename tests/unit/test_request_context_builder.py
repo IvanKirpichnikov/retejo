@@ -59,7 +59,7 @@ class ConcreteMethod(Method[Any]):
         ),
         (
             ConcreteMethod(
-                omitted_body=Omitted(),
+                omitted_body=Omitted(object),
                 body=None,
                 file=None,
                 header=None,

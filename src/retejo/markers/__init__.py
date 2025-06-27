@@ -1,7 +1,7 @@
-from .base import BaseMarker, get_marker_type, is_marker, is_marker_factory
-from .body import Body, BodyMarker, is_body
-from .file import File, FileMarker, is_file
-from .header import Header, HeaderMarker, is_header
+from .base import BaseMarker, get_markers, get_value_marker
+from .body import Body, BodyMarker
+from .file import File, FileMarker
+from .header import Header, HeaderMarker
 from .omitted import (
     Omittable,
     Omitted,
@@ -12,8 +12,8 @@ from .omitted import (
     is_omittable,
     is_omitted,
 )
-from .query_param import QueryParam, QueryParamMarker, is_query_param
-from .url_var import UrlVar, UrlVarMarker, is_url_var
+from .query_param import QueryParam, QueryParamMarker
+from .url_var import UrlVar, UrlVarMarker
 
 __all__ = (
     "BaseMarker",
@@ -29,18 +29,13 @@ __all__ = (
     "QueryParamMarker",
     "UrlVar",
     "UrlVarMarker",
-    "get_marker_type",
-    "is_body",
+    "get_marker_origin_tp",
+    "get_markers",
+    "get_value_marker",
     "is_defined",
-    "is_file",
-    "is_header",
-    "is_marker",
-    "is_marker_factory",
     "is_not_defined",
     "is_not_omittable",
     "is_not_omitted",
     "is_omittable",
     "is_omitted",
-    "is_query_param",
-    "is_url_var",
 )

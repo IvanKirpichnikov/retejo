@@ -19,7 +19,7 @@ from retejo.markers.omitted import (
     [
         (None, False),
         ("Omitted", False),
-        (Omitted(), True),
+        (Omitted(object), True),
     ],
 )
 def test_is_omitted(value: Any, result: bool) -> None:
@@ -31,7 +31,7 @@ def test_is_omitted(value: Any, result: bool) -> None:
     [
         (None, True),
         ("Omitted", True),
-        (Omitted(), False),
+        (Omitted(object), False),
     ],
 )
 def test_is_not_omitted(value: Any, result: bool) -> None:
@@ -42,7 +42,7 @@ def test_is_not_omitted(value: Any, result: bool) -> None:
     ("value", "result"),
     [
         (None, False),
-        (Omitted(), False),
+        (Omitted(object), False),
         ("Omitted", True),
         (1, True),
     ],
@@ -55,7 +55,7 @@ def test_is_defined(value: Any, result: bool) -> None:
     ("value", "result"),
     [
         (None, True),
-        (Omitted(), True),
+        (Omitted(object), True),
         ("Omitted", False),
         (1, False),
     ],

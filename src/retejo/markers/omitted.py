@@ -13,12 +13,14 @@ from typing import (
 from .base import get_value_marker
 
 
-class Omitted:
+class OmittedMarker:
     origin_tp: Any
 
     def __init__(self, origin_tp: Any) -> None:
         self.origin_tp = origin_tp
 
+
+class Omitted:
     def __bool__(self) -> bool | None:
         return False
 
@@ -31,7 +33,7 @@ else:
 
     class Omittable:
         def __class_getitem__(cls, tp: T) -> T | Omitted:
-            return Annotated[tp | Omitted, Omitted(Union[get_value_marker(tp), Omitted])]  # noqa: UP007
+            return Annotated[tp | Omitted, OmittedMarker(Union[get_value_marker(tp), Omitted])]  # noqa: UP007
 
 
 def is_omitted(value: Any) -> TypeGuard[Omitted]:

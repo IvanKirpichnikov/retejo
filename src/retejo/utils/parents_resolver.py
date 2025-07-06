@@ -80,7 +80,7 @@ class ParentsResolver:
         return [self._parametrize_by_dict(type_var_to_actual, tp) for tp in self._get_parents(origin)]
 
     def _unpack_args(self, args: TypeArgsTuple) -> TypeArgsTuple:
-        if HAS_UNPACK and any(strip_alias(arg) == typing.Unpack for arg in args):  # type: ignore[attr-defined]
+        if HAS_UNPACK and any(strip_alias(arg) == typing.Unpack for arg in args):  # type: ignore[attr-defined, unused-ignore]
             subscribed = tuple[args]  # type: ignore[valid-type]
             return tuple(arg.source for arg in normalize_type(subscribed).args)
         return args

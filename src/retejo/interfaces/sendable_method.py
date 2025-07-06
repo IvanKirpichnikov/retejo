@@ -17,6 +17,10 @@ class AsyncSendableMethod(Protocol):
     ) -> T:
         raise NotImplementedError
 
+    @abstractmethod
+    async def do_method(self, method: Method[T]) -> None:
+        raise NotImplementedError
+
 
 @runtime_checkable
 class SyncSendableMethod(Protocol):
@@ -27,4 +31,8 @@ class SyncSendableMethod(Protocol):
         self,
         method: Method[T],
     ) -> T:
+        raise NotImplementedError
+
+    @abstractmethod
+    def do_method(self, method: Method[T]) -> None:
         raise NotImplementedError

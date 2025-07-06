@@ -47,7 +47,7 @@ class AsyncSendableRequest(Protocol):
     @abstractmethod
     async def do_response(
         self,
-        request: Response,
+        response: Response,
     ) -> None:
         raise NotImplementedError
 
@@ -73,6 +73,6 @@ class SyncSendableRequest(Protocol):
     @abstractmethod
     def do_response(
         self,
-        request: Response,
+        response: Response,
     ) -> None:
         raise NotImplementedError

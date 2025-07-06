@@ -87,6 +87,39 @@ class BaseClient:
 
 
 class SyncBaseClient(BaseClient, SyncClient):
+    def send_method(
+        self,
+        method: Method[T],
+    ) -> T:
+        self.do_method(method)
+
+        request = self.method_to_request(method)
+        self.do_request(request)
+
+        response = self.send_request(request)
+        self.do_response(response)
+
+        return self.load_method_returning(
+            response=response.data,
+            method_returning_tp=method.__returning__,
+        )
+
+    def do_method(self, method: Method[T]) -> None:
+        loggers.method.debug("Called %r", method)
+
+    def do_request(
+        self,
+        request: Request,
+    ) -> None:
+        loggers.request.debug("Send %r", request)
+
+    def do_response(
+        self,
+        response: Response,
+    ) -> None:
+        loggers.response.debug("Received %r", response)
+        self.handle_response(response)
+
     def handle_response(self, response: Response) -> None:
         if response.status_code >= 400:
             self.handle_error_response(response)
@@ -97,37 +130,41 @@ class SyncBaseClient(BaseClient, SyncClient):
         else:
             raise ServerError(response.status_code)
 
-    def send_method(
+
+class AsyncBaseClient(BaseClient, AsyncClient):
+    async def send_method(
         self,
         method: Method[T],
     ) -> T:
-        loggers.method.debug("Called %r", method)
-        request = self.method_to_request(method)
-        loggers.request.debug("Send %r", request)
-        response = self.send_request(request)
-        loggers.response.debug("Received %r", response)
+        await self.do_method(method)
 
-        self.handle_response(response)
+        request = self.method_to_request(method)
+        await self.do_request(request)
+
+        response = await self.send_request(request)
+        await self.do_response(response)
 
         return self.load_method_returning(
             response=response.data,
             method_returning_tp=method.__returning__,
         )
 
-    def do_request(
+    async def do_method(self, method: Method[T]) -> None:
+        loggers.method.debug("Called %s", method)
+
+    async def do_request(
         self,
         request: Request,
     ) -> None:
-        pass
+        loggers.request.debug("Send %s", request)
 
-    def do_response(
+    async def do_response(
         self,
-        request: Response,
+        response: Response,
     ) -> None:
-        pass
+        loggers.response.debug("Received %s", response)
+        await self.handle_response(response)
 
-
-class AsyncBaseClient(BaseClient, AsyncClient):
     async def handle_response(self, response: Response) -> None:
         if response.status_code >= 400:
             await self.handle_error_response(response)
@@ -137,32 +174,3 @@ class AsyncBaseClient(BaseClient, AsyncClient):
             raise ClientError(response.status_code)
         else:
             raise ServerError(response.status_code)
-
-    async def send_method(
-        self,
-        method: Method[T],
-    ) -> T:
-        loggers.method.debug("Called %s", method)
-        request = self.method_to_request(method)
-        loggers.request.debug("Send %s", request)
-        response = await self.send_request(request)
-        loggers.response.debug("Received %s", response)
-
-        await self.handle_response(response)
-
-        return self.load_method_returning(
-            response=response.data,
-            method_returning_tp=method.__returning__,
-        )
-
-    async def do_request(
-        self,
-        request: Request,
-    ) -> None:
-        pass
-
-    async def do_response(
-        self,
-        request: Response,
-    ) -> None:
-        pass

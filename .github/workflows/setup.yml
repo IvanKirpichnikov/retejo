@@ -38,11 +38,23 @@ jobs:
 
     - name: Install dependencies
       run: |
-        uv pip install -e . --group lint -group tests --system
+        uv pip install -e . --group lint --group tests --system
 
     - name: Run ruff
       run: |
         ruff check
+
+    - name: Codespell run:
+      run: |
+        codespell src examples
+
+    - name: Bandit run:
+      run: |
+        bandit -c pyproject.toml -r src
+
+    - name: Slotscheck run 
+      run: |
+        slotscheck src
 
     - name: Run mypy
       run: |

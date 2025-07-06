@@ -20,6 +20,12 @@ def strip_tags(norm: BaseNormType) -> BaseNormType:
     return norm
 
 
+def strip_tag(norm: BaseNormType) -> BaseNormType:
+    if norm.origin in _TYPE_TAGS:
+        return norm.args[0]
+    return norm
+
+
 N = TypeVar("N", bound=BaseNormType)
 
 

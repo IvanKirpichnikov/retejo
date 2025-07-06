@@ -8,6 +8,8 @@ T = TypeVar("T")
 
 @runtime_checkable
 class AsyncSendableMethod(Protocol):
+    __slots__ = ()
+
     @abstractmethod
     async def send_method(
         self,
@@ -18,6 +20,8 @@ class AsyncSendableMethod(Protocol):
 
 @runtime_checkable
 class SyncSendableMethod(Protocol):
+    __slots__ = ()
+
     @abstractmethod
     def send_method(
         self,

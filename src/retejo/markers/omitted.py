@@ -1,39 +1,24 @@
 from typing import (
-    TYPE_CHECKING,
-    Annotated,
     Any,
     TypeAlias,
     TypeGuard,
     TypeVar,
-    Union,
-    get_args,
-    get_origin,
 )
 
-from .base import get_value_marker
-
-
-class OmittedMarker:
-    origin_tp: Any
-
-    def __init__(self, origin_tp: Any) -> None:
-        self.origin_tp = origin_tp
+from retejo._adaptix.type_tools.norm_utils import strip_tag
+from retejo._adaptix.type_tools.normalize_type import BaseNormType, is_normalize_type, normalize_type
 
 
 class Omitted:
     def __bool__(self) -> bool | None:
         return False
 
+    def __repr__(self) -> str:
+        return "<Omitted>"
+
 
 T = TypeVar("T")
-
-if TYPE_CHECKING:
-    Omittable: TypeAlias = T | Omitted
-else:
-
-    class Omittable:
-        def __class_getitem__(cls, tp: T) -> T | Omitted:
-            return Annotated[tp | Omitted, OmittedMarker(Union[get_value_marker(tp), Omitted])]  # noqa: UP007
+Omittable: TypeAlias = T | Omitted
 
 
 def is_omitted(value: Any) -> TypeGuard[Omitted]:
@@ -52,14 +37,21 @@ def is_not_defined(value: Omittable[T | None]) -> TypeGuard[Omittable[None]]:
     return not is_defined(value)
 
 
-def is_omittable(tp: Omittable[T]) -> bool:
-    res = get_value_marker(tp)
+def is_omittable_tp(tp: Any) -> bool:
+    norm_tp = normalize_type(tp) if not isinstance(tp, BaseNormType) else tp
+    for arg in norm_tp.args:
+        if is_normalize_type(arg):
+            arg = arg.source
 
-    if get_origin(res) is Union:
-        return next((True for arg in get_args(res) if arg is Omitted), False)
+        if arg is Omitted:
+            return True
 
-    return False
+    strip_norm_tp = strip_tag(norm_tp)
+    if strip_norm_tp is norm_tp:
+        return False
+
+    return is_omittable_tp(strip_norm_tp)
 
 
-def is_not_omittable(tp: Omittable[T]) -> bool:
-    return not is_omittable(tp)
+def is_not_omittable_tp(tp: Any) -> bool:
+    return not is_omittable_tp(tp)

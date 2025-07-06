@@ -11,20 +11,20 @@ from methods import (
 )
 
 from retejo import bind_method
+from retejo.clients.requests import RequestsClient
 from retejo.file_obj import FileObj
-from retejo.integrations.adaptix.requests import RequestsAdaptixClient
 
 
-class Client(RequestsAdaptixClient):
+class Client(RequestsClient):
     def __init__(self) -> None:
         super().__init__("https://jsonplaceholder.typicode.com/")
 
-    def init_response_factory(self) -> Retort:
-        result = super().init_response_factory()
-        return result.extend(
+    def init_response_loader(self) -> Retort:
+        response_loader = super().init_response_loader()
+        return response_loader.extend(
             recipe=[
                 name_mapping(name_style=NameStyle.CAMEL),
-            ]
+            ],
         )
 
     get_post = bind_method(GetPost)
@@ -39,8 +39,8 @@ class Client(RequestsAdaptixClient):
 def main() -> None:
     with Client() as client:
         print(client.list_posts())
-        print(client.get_post(84))
-        print(client.delete_post(84))  # type: ignore[func-returns-value]
+        print(client.get_post(id=84))
+        print(client.delete_post(id=84))  # type: ignore[func-returns-value]
         print(
             client.create_post(
                 user_id=10,

@@ -13,7 +13,7 @@
 
 ## Возможности
 
-- **Валидация данных** через `adaptix` или `pydantic`.
+- **Валидация данных** через `adaptix`.
 - **Полная типизация** для раннего обнаружения ошибок.
 - **Поддержка HTTP-клиентов**: `requests`, `aiohttp`, `httpx`.
 - **Декларативное описание** методов.
@@ -22,9 +22,9 @@
 
 ## Установка
 ```bash
-pip install retejo[requests, adaptix] # или pydantic
-pip install retejo[aiohttp, adaptix] # или pydantic
-pip install retejo[httpx, adaptix] # или pydantic
+pip install retejo[requests]
+pip install retejo[aiohttp]
+pip install retejo[httpx]
 ```
 
 ---
@@ -110,12 +110,12 @@ class CreatePost(Method[PostId]):
 ### 3. Создание клиента и переопределене логики парсинга ответа
 
 ```python
-class JSONPlaceholderClient(RequestsAdaptixClient):
+class JSONPlaceholderClient(RequestsClient):
     def __init__(self):
         super().__init__("https://jsonplaceholder.typicode.com/")
 
-    def init_response_factory(self) -> Retort:
-        return super().init_response_factory().extend(
+    def init_response_loader(self) -> Retort:
+        return super().init_response_loader().extend(
             recipe=[
                 # camelCase -> lower_case
                 name_mapping(name_style=NameStyle.CAMEL)
@@ -224,13 +224,6 @@ class CustomClient(RequestsAdaptixClient):
 - `requests` - синхронный
 - `aiohttp` - асинхронный
 - `httpx` - синхронный/асинхронный
-
----
-
-### Поддерживаемые валидаторы
-
-- `adaptix` (рекомендуется)
-- `pydantic (v2)`
 
 ---
 

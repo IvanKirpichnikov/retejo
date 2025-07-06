@@ -1,17 +1,19 @@
 from abc import abstractmethod
 from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import Any, Protocol, runtime_checkable
+from typing import Any, Protocol, TypeAlias, runtime_checkable
 
 from retejo.file_obj import FileObj
-from retejo.interfaces.request_context_builder import RequestContext
+from retejo.utils.request_context_proxy import RequestContextProxy
+
+MarkerName: TypeAlias = str
 
 
 @dataclass(slots=True, frozen=True)
 class Request:
     url: str
     http_method: str
-    context: RequestContext
+    context: RequestContextProxy
     body: Mapping[str, str] | None = None
     headers: Mapping[str, str] | None = None
     query_params: Mapping[str, str] | None = None
@@ -26,6 +28,8 @@ class Response:
 
 @runtime_checkable
 class AsyncSendableRequest(Protocol):
+    __slots__ = ()
+
     @abstractmethod
     async def send_request(
         self,
@@ -33,12 +37,42 @@ class AsyncSendableRequest(Protocol):
     ) -> Response:
         raise NotImplementedError
 
+    @abstractmethod
+    async def do_request(
+        self,
+        request: Request,
+    ) -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    async def do_response(
+        self,
+        request: Response,
+    ) -> None:
+        raise NotImplementedError
+
 
 @runtime_checkable
 class SyncSendableRequest(Protocol):
+    __slots__ = ()
+
     @abstractmethod
     def send_request(
         self,
         request: Request,
     ) -> Response:
+        raise NotImplementedError
+
+    @abstractmethod
+    def do_request(
+        self,
+        request: Request,
+    ) -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def do_response(
+        self,
+        request: Response,
+    ) -> None:
         raise NotImplementedError

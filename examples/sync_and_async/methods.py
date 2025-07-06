@@ -3,7 +3,7 @@ from typing import Any
 
 from retejo import Method
 from retejo.file_obj import FileObj
-from retejo.markers import Body, File, UrlVar
+from retejo.markers import Body, File, UrlVar, QueryParam, Header
 
 
 @dataclass
@@ -42,7 +42,7 @@ class CreatePost(Method[PostId]):
     __url__ = "posts"
     __method__ = "post"
 
-    user_id: Body[int]
+    user_id: QueryParam[int]
     title: Body[str]
     body: Body[str]
 

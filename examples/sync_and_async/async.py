@@ -12,20 +12,20 @@ from methods import (
 )
 
 from retejo import bind_method
+from retejo.clients.aiohttp import AiohttpClient
 from retejo.file_obj import FileObj
-from retejo.integrations.adaptix.aiohttp import AiohttpAdaptixClient
 
 
-class AsyncClient(AiohttpAdaptixClient):
+class AsyncClient(AiohttpClient):
     def __init__(self) -> None:
         super().__init__("https://jsonplaceholder.typicode.com/")
 
-    def init_response_factory(self) -> Retort:
-        result = super().init_response_factory()
-        return result.extend(
+    def init_response_loader(self) -> Retort:
+        response_loader = super().init_response_loader()
+        return response_loader.extend(
             recipe=[
                 name_mapping(name_style=NameStyle.CAMEL),
-            ]
+            ],
         )
 
     get_post = bind_method(GetPost)
@@ -39,9 +39,9 @@ class AsyncClient(AiohttpAdaptixClient):
 
 async def main() -> None:
     async with AsyncClient() as client:
-        print(await client.list_posts())
-        print(await client.get_post(84))
-        print(await client.delete_post(84))  # type: ignore[func-returns-value]
+        # print(await client.list_posts())
+        print(await client.get_post(id=84))
+        print(await client.delete_post(id=84))  # type: ignore[func-returns-value]
         print(
             await client.create_post(
                 user_id=10,

@@ -1,35 +1,36 @@
-from abc import abstractmethod
 from dataclasses import dataclass
-from typing import Any, ClassVar, Generic, TypeVar, get_args, get_origin
+from typing import Any, ClassVar, Generic, TypeVar
 
 from typing_extensions import dataclass_transform
 
-from retejo._internal.parents_resolver import ParentsResolver
-from retejo.method.context import MethodContext, create_method_context
+from retejo._adaptix.type_tools.fundamentals import get_generic_args, strip_alias
+from retejo.utils.parents_resolver import ParentsResolver
 
 
 def get_returning_tp(tp: Any) -> Any:
     parents = ParentsResolver().get_parents(tp)
 
     for parent in parents:
-        if get_origin(parent) is Method:  # type: ignore[comparison-overlap]
-            return get_args(parent)[0]
+        if strip_alias(parent) is Method:
+            return get_generic_args(parent)[0]
 
     raise RuntimeError(f"Not found __returning__ type by {tp!r} type")
 
 
-@dataclass_transform(frozen_default=True)
+@dataclass_transform(frozen_default=True, kw_only_default=True)
 class MethodMetaClass(type):
     def __new__(cls, name: str, bases: tuple[type, ...], namespace: dict[str, Any]) -> Any:
-        class_: Any = type.__new__(cls, name, bases, namespace)
+        class_: Any = super().__new__(cls, name, bases, namespace)
 
-        if class_.__name__ == "Method":
-            return class_
+        if "__slots__" not in namespace:
+            class_ = dataclass(
+                frozen=True,
+                slots=True,
+                kw_only=True,
+            )(class_)
 
-        class_ = dataclass(frozen=True)(class_)
-
-        class_.__returning__ = get_returning_tp(class_)
-        class_.__context__ = create_method_context(class_)
+        if class_.__name__ != "Method":
+            class_.__returning__ = get_returning_tp(class_)
 
         return class_
 
@@ -38,16 +39,14 @@ T = TypeVar("T")
 
 
 class Method(Generic[T], metaclass=MethodMetaClass):
-    @property
-    @abstractmethod
-    def __url__(self) -> str:
-        raise NotImplementedError
+    __slots__ = (
+        "__method__",
+        "__returning__",
+        "__url__",
+    )
 
-    @property
-    @abstractmethod
-    def __method__(self) -> str:
-        raise NotImplementedError
+    __url__: ClassVar[str]
+    __method__: ClassVar[str]
 
     # fill in meta class
-    __context__: ClassVar[MethodContext]
     __returning__: ClassVar[type[T]]  # type: ignore[misc]

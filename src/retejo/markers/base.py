@@ -1,59 +1,29 @@
-from typing import (
-    Annotated,
-    Any,
-    Protocol,
-    TypeVar,
-    Union,
-    get_args,
-    get_origin,
-    runtime_checkable,
-)
+from abc import ABC
+from typing import Any, ClassVar
+
+from retejo._adaptix.type_tools.norm_utils import strip_tag
+from retejo._adaptix.type_tools.normalize_type import BaseNormType, is_normalize_type, normalize_type
 
 
-@runtime_checkable
-class _OriginTp(Protocol):
-    origin_tp: Any
+class BaseMarker(ABC):
+    name: ClassVar[str]
+
+    def __repr__(self) -> str:
+        return f'<Marker "{self.name}">'
 
 
-class BaseMarker:
-    origin_tp: Any
+def get_marker(tp: Any) -> BaseMarker | None:
+    norm_tp = normalize_type(tp) if not isinstance(tp, BaseNormType) else tp
 
-    def __init__(self, origin_tp: Any) -> None:
-        self.origin_tp = origin_tp
+    for arg in norm_tp.args:
+        if is_normalize_type(arg):
+            arg = arg.source
 
+        if isinstance(arg, BaseMarker):
+            return arg
 
-T_co = TypeVar("T_co", bound=BaseMarker, covariant=True)
+    strip_norm_tp = strip_tag(norm_tp)
+    if strip_norm_tp is norm_tp:
+        return None
 
-
-def get_markers(obj: Any) -> list[BaseMarker] | None:
-    if get_origin(obj) is Annotated:
-        args = obj.__metadata__
-        res = [arg for arg in args if isinstance(arg, BaseMarker)]
-        if not res:
-            return None
-        return res
-    return None
-
-
-def _get_origin_tps(obj: Any) -> list[_OriginTp] | None:
-    if get_origin(obj) is Annotated:
-        args = obj.__metadata__
-        res = [arg for arg in args if isinstance(arg, _OriginTp)]
-        if not res:
-            return None
-        return res
-    return None
-
-
-def get_value_marker(obj: Any) -> Any:
-    if get_origin(obj) is Annotated:
-        origin_tps = _get_origin_tps(obj)
-        if origin_tps:
-            return Union[tuple(origin_tp.origin_tp for origin_tp in origin_tps)]  # noqa: UP007
-
-    args = get_args(obj)
-
-    if len(args) == 1:
-        return get_value_marker(args[0])
-
-    return obj
+    return get_marker(strip_norm_tp)

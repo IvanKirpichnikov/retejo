@@ -1,4 +1,4 @@
-# https://github.com/reagento/dishka/blob/develop/src/dishka/entities/with_parents.py
+# based https://github.com/reagento/dishka/blob/develop/src/dishka/entities/with_parents.py
 
 import typing
 from abc import ABC, ABCMeta
@@ -7,25 +7,25 @@ from enum import Enum
 from itertools import chain
 from typing import Final, Generic, Protocol, TypeAlias
 
-from retejo._internal._adaptix.common import TypeHint
-from retejo._internal._adaptix.feature_requirement import (
+from retejo._adaptix.common import TypeHint
+from retejo._adaptix.feature_requirement import (
     HAS_TV_TUPLE,
     HAS_UNPACK,
 )
-from retejo._internal._adaptix.type_tools import (  # type: ignore[attr-defined]
+from retejo._adaptix.type_tools import (  # type: ignore[attr-defined]
     normalize_type,
 )
-from retejo._internal._adaptix.type_tools.basic_utils import (
+from retejo._adaptix.type_tools.basic_utils import (
     get_type_vars_of_parametrized,
     is_generic,
     is_parametrized,
 )
-from retejo._internal._adaptix.type_tools.fundamentals import (
+from retejo._adaptix.type_tools.fundamentals import (
     get_generic_args,
     get_type_vars,
     strip_alias,
 )
-from retejo._internal._adaptix.type_tools.implicit_params import fill_implicit_params
+from retejo._adaptix.type_tools.implicit_params import fill_implicit_params
 
 IGNORE_TYPES: Final = (
     type,
@@ -77,12 +77,10 @@ class ParentsResolver:
             get_type_vars(origin),
             self._unpack_args(get_generic_args(parametrized_generic)),
         )
-        return [
-            self._parametrize_by_dict(type_var_to_actual, tp) for tp in self._get_parents(origin)
-        ]
+        return [self._parametrize_by_dict(type_var_to_actual, tp) for tp in self._get_parents(origin)]
 
     def _unpack_args(self, args: TypeArgsTuple) -> TypeArgsTuple:
-        if HAS_UNPACK and any(strip_alias(arg) == typing.Unpack for arg in args):
+        if HAS_UNPACK and any(strip_alias(arg) == typing.Unpack for arg in args):  # type: ignore[attr-defined]
             subscribed = tuple[args]  # type: ignore[valid-type]
             return tuple(arg.source for arg in normalize_type(subscribed).args)
         return args
@@ -94,9 +92,11 @@ class ParentsResolver:
     ) -> dict[TypeHint, TypeArgsTuple]:
         result = {}
         idx = 0
+        len_args = len(args)
+        len_type_vars = len(type_vars)
         for tv in type_vars:
             if HAS_TV_TUPLE and isinstance(tv, typing.TypeVarTuple):  # type: ignore[attr-defined, unused-ignore]
-                tuple_len = len(args) - len(type_vars) + 1
+                tuple_len = len_args - len_type_vars + 1
                 result[tv] = args[idx : idx + tuple_len]
                 idx += tuple_len
             else:
@@ -121,9 +121,5 @@ class ParentsResolver:
 
     def _get_parents(self, tp: TypeHint) -> list[TypeHint]:
         if hasattr(tp, "__orig_bases__"):
-            return [
-                parent
-                for parent in tp.__orig_bases__
-                if strip_alias(parent) not in (Generic, Protocol)
-            ]
+            return [parent for parent in tp.__orig_bases__ if strip_alias(parent) not in (Generic, Protocol)]
         return list(tp.__bases__)

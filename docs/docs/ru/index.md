@@ -13,7 +13,7 @@
 
 ## Возможности
 
-- **Валидация данных** через `adaptix` или `pydantic`.
+- **Валидация данных** через `adaptix`
 - **Полная типизация** для раннего обнаружения ошибок.
 - **Поддержка HTTP-клиентов**: `requests`, `aiohttp`, `httpx`.
 - **Декларативное описание** методов.
@@ -22,19 +22,11 @@
 
 ## Установка
 
-=== "adaptix"
-    ```bash
-    pip install retejo[requests, adaptix]
-    pip install retejo[aiohttp, adaptix]
-    pip install retejo[httpx, adaptix]
-    ```
-
-=== "pydantic"
-    ```bash
-    pip install retejo[requests, pydantic]
-    pip install retejo[aiohttp, pydantic]
-    pip install retejo[httpx, pydantic]
-    ```
+```bash
+pip install retejo[requests]
+pip install retejo[aiohttp]
+pip install retejo[httpx]
+```
 
 ---
 
@@ -60,7 +52,7 @@ class GetUser(Method[User]):
 
 === "requests"
     ```py
-    class RequestsClient(RequestsAdaptixClient):
+    class RequestsClient(RequestsClient):
         def __init__(self) -> None:
             super().__init__("https://web.server.com/api")
 
@@ -69,7 +61,7 @@ class GetUser(Method[User]):
 
 === "aiohttp"
     ```py
-    class AiohttpClient(AiohttpAdaptixClient):
+    class AiohttpClient(AiohttpClient):
         def __init__(self) -> None:
             super().__init__("https://web.server.com/api")
 
@@ -78,7 +70,7 @@ class GetUser(Method[User]):
 
 === "httpx (sync)"
     ```py
-    class HttpxClient(HttpxAdaptixSyncClient):
+    class HttpxClient(HttpxSyncClient):
         def __init__(self) -> None:
             super().__init__("https://web.server.com/api")
 
@@ -87,7 +79,7 @@ class GetUser(Method[User]):
 
 === "httpx (async)"
     ```py
-    class HttpxClient(HttpxAdaptixAsyncClient):
+    class HttpxClient(HttpxAsyncClient):
         def __init__(self) -> None:
             super().__init__("https://web.server.com/api")
 
@@ -142,12 +134,12 @@ class CreatePost(Method[PostId]):
 
 === "requests"
     ```python
-    class JSONPlaceholderClient(RequestsAdaptixClient):
+    class JSONPlaceholderClient(RequestsClient):
         def __init__(self):
             super().__init__("https://jsonplaceholder.typicode.com/")
 
-        def init_response_factory(self) -> Retort:
-            return super().init_response_factory().extend(
+        def init_response_loader(self) -> Retort:
+            return super().init_response_loader().extend(
                 recipe=[
                     # camelCase -> lower_case
                     name_mapping(name_style=NameStyle.CAMEL)
@@ -160,12 +152,12 @@ class CreatePost(Method[PostId]):
 
 === "aiohttp"
     ```python
-    class JSONPlaceholderClient(AiohttpAdaptixClient):
+    class JSONPlaceholderClient(AiohttpClient):
         def __init__(self):
             super().__init__("https://jsonplaceholder.typicode.com/")
 
-        def init_response_factory(self) -> Retort:
-            return super().init_response_factory().extend(
+        def init_response_loader(self) -> Retort:
+            return super().init_response_loader().extend(
                 recipe=[
                     # camelCase -> lower_case
                     name_mapping(name_style=NameStyle.CAMEL)
@@ -178,12 +170,12 @@ class CreatePost(Method[PostId]):
 
 === "httpx (sync)"
     ```python
-    class JSONPlaceholderClient(HttpxAdaptixSyncClient):
+    class JSONPlaceholderClient(HttpxSyncClient):
         def __init__(self):
             super().__init__("https://jsonplaceholder.typicode.com/")
 
-        def init_response_factory(self) -> Retort:
-            return super().init_response_factory().extend(
+        def init_response_loader(self) -> Retort:
+            return super().init_response_loader().extend(
                 recipe=[
                     # camelCase -> lower_case
                     name_mapping(name_style=NameStyle.CAMEL)
@@ -196,12 +188,12 @@ class CreatePost(Method[PostId]):
 
 === "httpx (async)"
     ```python
-    class JSONPlaceholderClient(HttpxAdaptixAsyncClient):
+    class JSONPlaceholderClient(HttpxAsyncClient):
         def __init__(self):
             super().__init__("https://jsonplaceholder.typicode.com/")
 
-        def init_response_factory(self) -> Retort:
-            return super().init_response_factory().extend(
+        def init_response_loader(self) -> Retort:
+            return super().init_response_loader().extend(
                 recipe=[
                     # camelCase -> lower_case
                     name_mapping(name_style=NameStyle.CAMEL)

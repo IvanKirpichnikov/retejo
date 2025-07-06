@@ -18,12 +18,14 @@ class SyncClient(
     SyncSendableMethod,
     Protocol,
 ):
+    __slots__ = ()
+
     @abstractmethod
-    def _handle_error_response(self, response: Response) -> None:
+    def handle_error_response(self, response: Response) -> None:
         raise NotImplementedError
 
     @abstractmethod
-    def _handle_response(self, response: Response) -> None:
+    def handle_response(self, response: Response) -> None:
         raise NotImplementedError
 
     @abstractmethod
@@ -48,12 +50,14 @@ class AsyncClient(
     AsyncSendableMethod,
     Protocol,
 ):
+    __slots__ = ()
+
     @abstractmethod
-    async def _handle_error_response(self, response: Response) -> None:
+    async def handle_error_response(self, response: Response) -> None:
         raise NotImplementedError
 
     @abstractmethod
-    async def _handle_response(self, response: Response) -> None:
+    async def handle_response(self, response: Response) -> None:
         raise NotImplementedError
 
     @abstractmethod

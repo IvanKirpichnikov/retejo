@@ -1,24 +1,21 @@
 [build-system]
-requires = ["setuptools==80.9.0"]
-build-backend = "setuptools.build_meta"
-
-[tool.setuptools]
-include-package-data = true
-
-[tool.setuptools.packages.find]
-where = ["src"]
+requires = ["uv_build==0.7.19"]
+build-backend = "uv_build"
 
 [project]
 name = "retejo"
 description = "Modern python http client"
-version = "0.0.4"
+version = "1.0.0"
 readme = "README.md"
 authors = [
     { name = "Ivan Kirpichnikov", email = "mmssvvvv570@gmail.com" }
 ]
 license = { text = "MIT" }
 requires-python = ">=3.10"
-dependencies = ["typing_extensions>=4.10.0,<5.0.0"]
+dependencies = [
+    "adaptix==3.0.0b11",
+    "typing_extensions~=4.10.0",
+]
 
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -42,34 +39,29 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-requests = [ "requests>=2.27.0, <3.0.0" ]
-aiohttp = [ "aiohttp>=3.10.0, <4.0.0" ]
-adaptix = [ "adaptix>=3.0.0b1, <4.0.0" ]
-pydantic = [ "pydantic~=2.11.7"]
+requests = [ "requests~=2.27.0" ]
+aiohttp = [ "aiohttp~=3.10.0" ]
 
-integrations = [
-    "retejo[aiohttp, requests]",
-    "retejo[adaptix, pydantic]",
-]
+[dependency-groups]
+integrations = [ "retejo[aiohttp, requests]" ]
 
-types = [
-    "types-requests~=2.32.4.20250611",
-]
+types = [ "types-requests~=2.32.4.20250611" ]
 
 lint = [
     "retejo[types]",
-    "mypy==1.16.1",
-    "ruff==0.11.13",
+    "mypy~=1.16.1",
+    "ruff~=0.11.13",
+    "codespell~=2.4.1",
+    "bandit~=1.8.5",
+    "slotscheck==0.19.1",
 ]
 
 tests = [
-    "pytest==8.4.1",
-    "pytest-asyncio==1.0.0",
-    "pytest-xdist==3.7.0",
-    "pytest-cov==6.2.1",
-    "coverage==7.9.1",
-    "aioresponses==0.7.8",
-    "requests_mock==1.12.1",
+    "pytest~=8.4.1",
+    "pytest-asyncio~=1.0.0",
+    "pytest-xdist~=3.7.0",
+    "pytest-cov~=6.2.1",
+    "coverage~=7.9.1",
 ]
 
 docs = [
@@ -86,19 +78,18 @@ docs = [
 ]
 
 dev = [
-    "retejo[tests, lint, integrations]",
+    { include-group = "integrations" },
+    { include-group = "types" },
+    { include-group = "tests" },
+    { include-group = "docs" },
 ]
 
 [tool.mypy]
 files = ["src", "tests"]
 exclude = [
-    "src/retejo/_internal/_adaptix/*",
-    "src/retejo/_internal/parents_resolver.py",
-    "src/retejo/integrations/adaptix/_omit_provider.py",
+    "src/retejo/_adaptix/*",
 ]
 strict = true
-python_version = "3.10"
-sqlite_cache = true
 
 disallow_any_decorated = false
 disallow_any_generics = false
@@ -112,9 +103,9 @@ include = [
     "tests/**/*.py",
     "pyproject.toml"
 ]
-exclude = ["src/retejo/_internal/_adaptix"]
+exclude = ["src/retejo/_adaptix/"]
 fix = true
-line-length = 99
+line-length = 120
 target-version = "py310"
 
 [tool.ruff.lint]
@@ -178,7 +169,7 @@ skip-magic-trailing-comma = false
 line-ending = "lf"
 
 [tool.pytest.ini_options]
-addopts = "--cov src -n3"
+addopts = "--cov src"
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
 
@@ -187,7 +178,7 @@ parallel = true
 branch = true
 concurrency = ["multiprocessing", "thread"]
 source = ["tests"]
-omit = ["**/__init__.py", "src/retejo/_internal/**", "src/retejo/integrations/adaptix/_omit_provider.py"]
+omit = ["src/retejo/_adaptix/**"]
 
 [tool.coverage.report]
 show_missing = true
@@ -206,3 +197,14 @@ exclude_also = [
     "pass",
     '\.\.\.',
 ]
+
+[tool.slotscheck]
+strict-imports = true
+exclude-modules = '''
+(
+  (^|\.)_adaptix  # ignore retejo._adaptix
+)
+'''
+
+[tool.bandit]
+exclude_dirs = ["src/retejo/_adaptix"]

@@ -1,17 +1,11 @@
-from typing import TYPE_CHECKING, Annotated, TypeAlias, TypeVar
+from typing import Annotated, TypeAlias, TypeVar
 
-from retejo.markers.base import BaseMarker, get_value_marker
+from retejo.markers.base import BaseMarker
 
 
 class QueryParamMarker(BaseMarker):
-    pass
+    name = "QueryParam"
 
 
 T = TypeVar("T")
-if TYPE_CHECKING:
-    QueryParam: TypeAlias = Annotated[T, QueryParamMarker(T)]
-else:
-
-    class QueryParam:
-        def __class_getitem__(cls, tp: T) -> T:
-            return Annotated[tp, QueryParamMarker(get_value_marker(tp))]
+QueryParam: TypeAlias = Annotated[T, QueryParamMarker()]

@@ -21,6 +21,7 @@ from typing import (
     NewType,
     NoReturn,
     Optional,
+    TypeGuard,
     TypeVar,
     Union,
     overload,
@@ -864,3 +865,7 @@ def normalize_type(tp: TypeHint) -> BaseNormType:
         return _STD_NORMALIZER.normalize(tp)
 
     return _cached_normalize(tp)
+
+
+def is_normalize_type(tp: TypeHint) -> TypeGuard[BaseNormType]:
+    return isinstance(tp, BaseNormType)

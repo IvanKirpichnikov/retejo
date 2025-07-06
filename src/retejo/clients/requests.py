@@ -5,16 +5,13 @@ from typing import IO, Any, cast
 
 from requests import RequestException, Session
 
+from retejo.clients.base import SyncBaseClient
 from retejo.errors import ClientLibraryError, MalformedResponseError
 from retejo.file_obj import FileObj
-from retejo.integrations.common.base import SyncBaseClient
 from retejo.interfaces import Request, Response
 
 
-class RequestsBaseClient(SyncBaseClient[Any]):
-    _base_url: str
-    _session: Session
-
+class RequestsClient(SyncBaseClient):
     def __init__(
         self,
         base_url: str,
@@ -41,10 +38,7 @@ class RequestsBaseClient(SyncBaseClient[Any]):
         request: Request,
     ) -> Response:
         if request.files is not None:
-            files = {
-                file_key: self.prepare_file_obj(file_key, file)
-                for file_key, file in request.files.items()
-            }
+            files = {file_key: self.prepare_file_obj(file_key, file) for file_key, file in request.files.items()}
         else:
             files = None
 

@@ -44,11 +44,11 @@ jobs:
       run: |
         ruff check
 
-    - name: Codespell run:
+    - name: Codespell run
       run: |
         codespell src examples
 
-    - name: Bandit run:
+    - name: Bandit run
       run: |
         bandit -c pyproject.toml -r src
 

@@ -45,7 +45,7 @@ aiohttp = [ "aiohttp~=3.10.0" ]
 [dependency-groups]
 integrations = [ "retejo[aiohttp, requests]" ]
 
-types = [ "types-requests~=2.32.4.20250611" ]
+types = [ "types-requests" ]
 
 lint = [
     { include-group = "types" },

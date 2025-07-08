@@ -1,16 +1,16 @@
 from abc import abstractmethod
-from collections.abc import Mapping
 from types import NoneType
 from typing import Any, Generic, TypeVar
 
 from adaptix import Omitted, Retort, as_is_dumper, as_sentinel
 
-from retejo.core.client import AsyncClient, SyncClient
+from retejo.core.clients import AsyncClient, SyncClient
 from retejo.core.entities import RequestContextProxy
 from retejo.http import loggers
 from retejo.http.entities import FileObj, HttpMethod, HttpRequest, HttpResponse
 from retejo.http.errors import ClientError, ServerError
 from retejo.http.markers import BodyMarker, FileMarker, HeaderMarker, QueryParamMarker, UrlVarMarker
+from retejo.utils._fixed_type_hint_tags_unwrapping_provider import FixedTypeHintTagsUnwrappingProvider
 from retejo.utils.method_dumper import method_dumper
 
 _MethodResultT = TypeVar("_MethodResultT")
@@ -33,6 +33,7 @@ class BaseHttpClient:
                 as_sentinel(Omitted),
                 as_is_dumper(FileObj),
                 method_dumper(),
+                FixedTypeHintTagsUnwrappingProvider(),
             ]
         )
 
@@ -40,6 +41,7 @@ class BaseHttpClient:
         return Retort(
             recipe=[
                 as_sentinel(Omitted),
+                FixedTypeHintTagsUnwrappingProvider(),
             ]
         )
 
@@ -64,18 +66,19 @@ class BaseHttpClient:
 
     def load_method_result(
         self,
-        response: Mapping[str, Any],
+        response: HttpResponse[_RawResponseT],
         method_result: type[_MethodResultT],
     ) -> _MethodResultT:
         if method_result in (NoneType, None):
             return None  # type: ignore[return-value]
 
-        return self.response_loader.load(response, method_result)
+        return self.response_loader.load(response.data, method_result)
+
 
 
 class SyncHttpClient(
     BaseHttpClient,
-    SyncClient[HttpMethod, HttpRequest, HttpResponse[_RawResponseT]],
+    SyncClient[HttpMethod[Any], HttpRequest, HttpResponse[_RawResponseT]],
     Generic[_RawResponseT],
 ):
     def send_method(
@@ -91,7 +94,7 @@ class SyncHttpClient(
         self.handle_response(response)
 
         return self.load_method_result(
-            response=response.data,
+            response=response,
             method_result=method.__result__,
         )
 
@@ -124,9 +127,10 @@ class SyncHttpClient(
             raise ServerError(response.status_code)
 
 
+
 class AsyncHttpClient(
     BaseHttpClient,
-    AsyncClient[HttpMethod, HttpRequest, HttpResponse[_RawResponseT]],
+    AsyncClient[HttpMethod[Any], HttpRequest, HttpResponse[_RawResponseT]],
     Generic[_RawResponseT],
 ):
     async def send_method(
@@ -142,7 +146,7 @@ class AsyncHttpClient(
         await self.handle_response(response)
 
         return self.load_method_result(
-            response=response.data,
+            response=response,
             method_result=method.__result__,
         )
 

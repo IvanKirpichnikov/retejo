@@ -91,11 +91,10 @@ exclude = [
 ]
 strict = true
 
-disallow_any_decorated = false
-disallow_any_generics = false
-disallow_any_explicit = false
-disallow_any_expr = false
-disallow_untyped_calls = false
+# disallow_any_decorated = false
+# disallow_any_generics = false
+# disallow_any_explicit = false
+# disallow_any_expr = false
 
 [tool.ruff]
 include = [
@@ -157,6 +156,8 @@ ignore = [
     "D203",
 
     "TC002",
+
+    "UP038",
 ]
 
 

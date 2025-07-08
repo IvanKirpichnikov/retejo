@@ -2,8 +2,8 @@ import inspect
 from collections.abc import Awaitable, Callable
 from typing import Any, Generic, NoReturn, ParamSpec, TypeVar, cast, overload
 
+from retejo.core.clients import AsyncSendableMethod, SyncSendableMethod
 from retejo.core.entities import Method
-from retejo.core.sendable_method import AsyncSendableMethod, SyncSendableMethod
 
 _MethodResultT = TypeVar("_MethodResultT")
 _MethodParamSpec = ParamSpec("_MethodParamSpec")
@@ -19,14 +19,14 @@ class _BindMethod(Generic[_MethodParamSpec, _MethodResultT]):
     @overload
     def __get__(
         self,
-        obj: SyncSendableMethod,
+        obj: SyncSendableMethod[Any],
         objtype: Any = None,
     ) -> Callable[_MethodParamSpec, _MethodResultT]: ...
 
     @overload
     def __get__(
         self,
-        obj: AsyncSendableMethod,
+        obj: AsyncSendableMethod[Any],
         objtype: Any = None,
     ) -> Callable[_MethodParamSpec, Awaitable[_MethodResultT]]: ...
 
@@ -42,11 +42,11 @@ class _BindMethod(Generic[_MethodParamSpec, _MethodResultT]):
         obj: Any,
         objtype: Any = None,
     ) -> Any:
-        if not isinstance(obj, SyncSendableMethod | AsyncSendableMethod):
-            raise RuntimeError("bind_method use is only (Async | Sync)SendableMethod interfaces")
+        if not isinstance(obj, (AsyncSendableMethod, SyncSendableMethod)):
+            raise RuntimeError("bind_method use is only AsyncClient or SyncClient interfaces")
 
         if inspect.iscoroutinefunction(obj.send_method):
-            async_client = cast("AsyncSendableMethod", obj)
+            async_client = obj
 
             async def async_wrapper(
                 *args: _MethodParamSpec.args,
@@ -56,7 +56,7 @@ class _BindMethod(Generic[_MethodParamSpec, _MethodResultT]):
 
             return async_wrapper
         else:
-            sync_client = cast("SyncSendableMethod", obj)
+            sync_client = cast("SyncSendableMethod[Any]", obj)
 
             def sync_wrapper(
                 *args: _MethodParamSpec.args,

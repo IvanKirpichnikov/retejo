@@ -17,6 +17,7 @@ from retejo.http.markers import (
     UrlVar,
     UrlVarMarker,
 )
+from retejo.utils._fixed_type_hint_tags_unwrapping_provider import FixedTypeHintTagsUnwrappingProvider
 from retejo.utils.for_marker import for_marker
 from retejo.utils.method_dumper import method_dumper
 
@@ -25,6 +26,7 @@ retort = Retort(
         as_sentinel(Omitted),
         as_is_dumper(FileObj),
         method_dumper(),
+        FixedTypeHintTagsUnwrappingProvider(),
     ]
 )
 

@@ -1,5 +1,5 @@
 import urllib.parse
-from collections.abc import Mapping
+from collections.abc import Mapping, MutableMapping
 from json import JSONDecodeError
 from typing import IO, Any, cast
 
@@ -31,12 +31,13 @@ class RequestsClient(SyncHttpClient[Response]):
         if headers is not None:
             self._session.headers.update(headers)
         if cookies is not None:
-            self._session.cookies.update(cookies)
+            session_cookies: MutableMapping[Any, Any] = self._session.cookies
+            session_cookies.update(cookies)
 
     def send_request(
         self,
         request: HttpRequest,
-    ) -> HttpResponse:
+    ) -> HttpResponse[Response]:
         if request.files is not None:
             files = {file_key: self.file_obj_converter(file_key, file) for file_key, file in request.files.items()}
         else:

@@ -49,6 +49,6 @@ def for_marker(
 ) -> LocStackChecker:
     return ForMarkerLocStackChecker(
         marker=marker,
-        subclass=True,
+        subclass=subclass,
         loc_stack_checker=create_loc_stack_checker(predicate),
     )

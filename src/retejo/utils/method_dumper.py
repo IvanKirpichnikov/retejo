@@ -64,11 +64,11 @@ class _MethodSievesMaker(BuiltinSievesMaker):
 class _MethodDumperStructureMaker(BuiltinStructureMaker):
     def _map_fields(
         self,
-        mediator: Mediator,
-        request: BaseNameLayoutRequest,
+        mediator: Mediator[BaseNameLayoutRequest[Any]],
+        request: BaseNameLayoutRequest[Any],
         schema: StructureSchema,
-        extra_move: InpExtraMove | OutExtraMove,
-    ) -> Iterable[FieldAndPath]:
+        extra_move: InpExtraMove[Any] | OutExtraMove[Any],
+    ) -> Iterable[FieldAndPath[Any]]:
         for field, path in super()._map_fields(
             mediator=mediator,
             request=request,
@@ -77,7 +77,7 @@ class _MethodDumperStructureMaker(BuiltinStructureMaker):
         ):
             yield self._custom_map(field, path)
 
-    def _custom_map(self, field: BaseField, path: KeyPath | None) -> FieldAndPath:
+    def _custom_map(self, field: BaseField, path: KeyPath | None) -> FieldAndPath[Any]:
         if path is None:
             return field, path
 
@@ -88,7 +88,7 @@ class _MethodDumperStructureMaker(BuiltinStructureMaker):
         return field, (marker.name, *path)
 
 
-class MethodDumperProvider(BuiltinNameLayoutProvider):
+class MethodDumperProvider(BuiltinNameLayoutProvider):  # type: ignore[no-untyped-call]
     def __init__(self) -> None:
         super().__init__(
             sieves_maker=_MethodSievesMaker(),

@@ -20,26 +20,26 @@ class PostId:
 
 class GetPost(HttpMethod[Post]):
     __url__ = "posts/{id}"
-    __method__ = "get"
+    __http_method__ = "get"
 
     id: UrlVar[int]
 
 
 class ListPosts(HttpMethod[list[Post]]):
     __url__ = "posts"
-    __method__ = "get"
+    __http_method__ = "get"
 
 
 class DeletePost(HttpMethod[None]):
     __url__ = "posts/{id}"
-    __method__ = "delete"
+    __http_method__ = "delete"
 
     id: UrlVar[int]
 
 
 class CreatePost(HttpMethod[PostId]):
     __url__ = "posts"
-    __method__ = "post"
+    __http_method__ = "post"
 
     user_id: Body[int]
     title: Body[str]
@@ -48,6 +48,6 @@ class CreatePost(HttpMethod[PostId]):
 
 class UploadImage(HttpMethod[Any]):
     __url__ = "https://httpbin.org/post"
-    __method__ = "post"
+    __http_method__ = "post"
 
     file: File[FileObj]

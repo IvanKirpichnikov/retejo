@@ -1,7 +1,7 @@
 from collections.abc import Iterable
 from typing import Any, cast
 
-from adaptix import Mediator
+from adaptix import Mediator, Provider, bound
 from adaptix._internal.model_tools.definitions import BaseField, NoDefault, OutputField
 from adaptix._internal.morphing.model.crown_definitions import (
     BaseNameLayoutRequest,
@@ -23,10 +23,11 @@ from adaptix._internal.morphing.name_layout.component import (
     apply_lsc,
 )
 from adaptix._internal.morphing.name_layout.provider import BuiltinNameLayoutProvider
+from adaptix._internal.provider.loc_stack_filtering import OriginSubclassLSC
 from adaptix._internal.provider.overlay_schema import provide_schema
 
-from retejo.markers.base import get_marker
-from retejo.markers.omitted import is_omittable_tp, is_omitted
+from retejo.core.entities import Method
+from retejo.core.markers import get_marker, is_omittable_tp, is_omitted
 
 
 class _MethodSievesMaker(BuiltinSievesMaker):
@@ -95,3 +96,10 @@ class MethodDumperProvider(BuiltinNameLayoutProvider):
             extra_move_maker=BuiltinExtraMoveAndPoliciesMaker(),
             extra_policies_maker=BuiltinExtraMoveAndPoliciesMaker(),
         )
+
+
+def method_dumper() -> Provider:
+    return bound(
+        OriginSubclassLSC(Method),
+        MethodDumperProvider(),
+    )

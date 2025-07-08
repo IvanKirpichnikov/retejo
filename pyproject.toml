@@ -79,7 +79,7 @@ docs = [
 
 dev = [
     { include-group = "integrations" },
-    { include-group = "types" },
+    { include-group = "lint" },
     { include-group = "tests" },
     { include-group = "docs" },
 ]
@@ -87,7 +87,7 @@ dev = [
 [tool.mypy]
 files = ["src", "tests"]
 exclude = [
-    "src/retejo/_adaptix/*",
+    "src/retejo/_type_tools/*",
 ]
 strict = true
 
@@ -103,7 +103,7 @@ include = [
     "tests/**/*.py",
     "pyproject.toml"
 ]
-exclude = ["src/retejo/_adaptix/"]
+exclude = ["src/retejo/_type_tools/**"]
 fix = true
 line-length = 120
 target-version = "py310"
@@ -154,7 +154,9 @@ ignore = [
     "D106",     # missing docstring in public nested class
     "D107",     # missing docstring in __init__
     "D212",
-    "D203"
+    "D203",
+
+    "TC002",
 ]
 
 
@@ -178,7 +180,7 @@ parallel = true
 branch = true
 concurrency = ["multiprocessing", "thread"]
 source = ["tests"]
-omit = ["src/retejo/_adaptix/**"]
+omit = ["src/retejo/_type_tools/**"]
 
 [tool.coverage.report]
 show_missing = true
@@ -202,9 +204,9 @@ exclude_also = [
 strict-imports = true
 exclude-modules = '''
 (
-  (^|\.)_adaptix  # ignore retejo._adaptix
+  (^|\.)_type_tools  # ignore retejo._type_tools
 )
 '''
 
 [tool.bandit]
-exclude_dirs = ["src/retejo/_adaptix"]
+exclude_dirs = ["src/retejo/_type_tools"]

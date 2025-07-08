@@ -1,9 +1,9 @@
 lint:
-    ruff check 
+    ruff check
     mypy
-    codespell src examples
-    bandit -c pyproject.toml -r src
-    slotscheck src
+    codespell src examples tests
+    bandit -c pyproject.toml -r src examples
+    slotscheck src  # Можно скипнуть
 
 format:
     ruff format

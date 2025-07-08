@@ -7,25 +7,25 @@ from enum import Enum
 from itertools import chain
 from typing import Final, Generic, Protocol, TypeAlias
 
-from retejo._adaptix.common import TypeHint
-from retejo._adaptix.feature_requirement import (
-    HAS_TV_TUPLE,
-    HAS_UNPACK,
-)
-from retejo._adaptix.type_tools import (  # type: ignore[attr-defined]
+from retejo._type_tools import (  # type: ignore[attr-defined]
     normalize_type,
 )
-from retejo._adaptix.type_tools.basic_utils import (
+from retejo._type_tools.basic_utils import (
     get_type_vars_of_parametrized,
     is_generic,
     is_parametrized,
 )
-from retejo._adaptix.type_tools.fundamentals import (
+from retejo._type_tools.common import TypeHint
+from retejo._type_tools.feature_requirement import (
+    HAS_TV_TUPLE,
+    HAS_UNPACK,
+)
+from retejo._type_tools.fundamentals import (
     get_generic_args,
     get_type_vars,
     strip_alias,
 )
-from retejo._adaptix.type_tools.implicit_params import fill_implicit_params
+from retejo._type_tools.implicit_params import fill_implicit_params
 
 IGNORE_TYPES: Final = (
     type,

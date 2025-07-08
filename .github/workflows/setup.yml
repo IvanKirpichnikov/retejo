@@ -52,10 +52,6 @@ jobs:
       run: |
         bandit -c pyproject.toml -r src
 
-    - name: Slotscheck run 
-      run: |
-        slotscheck src
-
     - name: Run mypy
       run: |
         mypy --config-file pyproject.toml

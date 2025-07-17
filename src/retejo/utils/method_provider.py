@@ -71,8 +71,12 @@ class MethodDumperProvider(BuiltinNameLayoutProvider):  # type: ignore[no-untype
 
 
 def method_provider(
+    method_tp: type[Method[Any]] | None = None,
     marker_path_maker: BaseMarkerFieldPathMaker | None = None,
 ) -> Provider:
+    if method_tp is None:
+        method_tp = Method
+
     if marker_path_maker is None:
         marker_path_maker = MarkerFieldPathMaker()
 
@@ -80,7 +84,7 @@ def method_provider(
         as_sentinel(Omitted),
         FixedTypeHintTagsUnwrappingProvider(),
         bound(
-            OriginSubclassLSC(Method),
+            OriginSubclassLSC(method_tp),
             MethodDumperProvider(marker_path_maker),
         ),
     )

@@ -1,42 +1,32 @@
-from collections.abc import Iterable
 from typing import Any, cast
 
-from adaptix import Mediator, Provider, bound
-from adaptix._internal.model_tools.definitions import BaseField, NoDefault, OutputField
+from adaptix import Mediator, Provider, as_sentinel, bound
+from adaptix._internal.model_tools.definitions import NoDefault, OutputField
 from adaptix._internal.morphing.model.crown_definitions import (
-    BaseNameLayoutRequest,
-    InpExtraMove,
     LeafOutCrown,
-    OutExtraMove,
     OutFieldCrown,
     OutputNameLayoutRequest,
     Sieve,
 )
-from adaptix._internal.morphing.name_layout.base import KeyPath, PathsTo
+from adaptix._internal.morphing.name_layout.base import PathsTo
 from adaptix._internal.morphing.name_layout.component import (
     BuiltinExtraMoveAndPoliciesMaker,
     BuiltinSievesMaker,
-    BuiltinStructureMaker,
-    FieldAndPath,
     SievesOverlay,
-    StructureSchema,
     apply_lsc,
 )
 from adaptix._internal.morphing.name_layout.provider import BuiltinNameLayoutProvider
 from adaptix._internal.provider.loc_stack_filtering import OriginSubclassLSC
 from adaptix._internal.provider.overlay_schema import provide_schema
+from adaptix._internal.provider.provider_wrapper import ConcatProvider
 
 from retejo.core.entities import Method
-from retejo.core.markers import get_marker, is_omittable_tp, is_omitted
+from retejo.core.markers import Omitted, is_omittable_tp, is_omitted
+from retejo.utils._fixed_type_hint_tags_unwrapping_provider import FixedTypeHintTagsUnwrappingProvider
+from retejo.utils.marker_field_path_maker import BaseMarkerFieldPathMaker, MarkerFieldPathMaker
 
 
 class _MethodSievesMaker(BuiltinSievesMaker):
-    def _create_sieve(self, field: OutputField) -> Sieve:
-        if is_omittable_tp(field.type):
-            return cast("Sieve", lambda obj, value=None: not is_omitted(obj))
-        else:
-            return super()._create_sieve(field)
-
     def make_sieves(
         self,
         mediator: Mediator[Any],
@@ -60,46 +50,37 @@ class _MethodSievesMaker(BuiltinSievesMaker):
                     result[path] = self._create_sieve(field)
         return result
 
-
-class _MethodDumperStructureMaker(BuiltinStructureMaker):
-    def _map_fields(
-        self,
-        mediator: Mediator[BaseNameLayoutRequest[Any]],
-        request: BaseNameLayoutRequest[Any],
-        schema: StructureSchema,
-        extra_move: InpExtraMove[Any] | OutExtraMove[Any],
-    ) -> Iterable[FieldAndPath[Any]]:
-        for field, path in super()._map_fields(
-            mediator=mediator,
-            request=request,
-            schema=schema,
-            extra_move=extra_move,
-        ):
-            yield self._custom_map(field, path)
-
-    def _custom_map(self, field: BaseField, path: KeyPath | None) -> FieldAndPath[Any]:
-        if path is None:
-            return field, path
-
-        marker = get_marker(field.type)
-        if not marker:
-            raise ValueError
-
-        return field, (marker.name, *path)
+    def _create_sieve(self, field: OutputField) -> Sieve:
+        if is_omittable_tp(field.type):
+            return cast("Sieve", lambda obj, value=None: not is_omitted(obj))
+        else:
+            return super()._create_sieve(field)
 
 
 class MethodDumperProvider(BuiltinNameLayoutProvider):  # type: ignore[no-untyped-call]
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        marker_path_maker: BaseMarkerFieldPathMaker,
+    ) -> None:
         super().__init__(
             sieves_maker=_MethodSievesMaker(),
-            structure_maker=_MethodDumperStructureMaker(),
+            structure_maker=marker_path_maker,
             extra_move_maker=BuiltinExtraMoveAndPoliciesMaker(),
             extra_policies_maker=BuiltinExtraMoveAndPoliciesMaker(),
         )
 
 
-def method_dumper() -> Provider:
-    return bound(
-        OriginSubclassLSC(Method),
-        MethodDumperProvider(),
+def method_provider(
+    marker_path_maker: BaseMarkerFieldPathMaker | None = None,
+) -> Provider:
+    if marker_path_maker is None:
+        marker_path_maker = MarkerFieldPathMaker()
+
+    return ConcatProvider(
+        as_sentinel(Omitted),
+        FixedTypeHintTagsUnwrappingProvider(),
+        bound(
+            OriginSubclassLSC(Method),
+            MethodDumperProvider(marker_path_maker),
+        ),
     )

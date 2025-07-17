@@ -165,7 +165,7 @@ Retejo предоставляет 6 видов маркеров
 | Маркер       | Назначение                                             | Пример                                  |
 |--------------|--------------------------------------------------------|-----------------------------------------|
 | `Body`       | Тело запроса (application/json)                        | `title: Body[str]`                      |
-| `File`       | Файл (multipart/form-data)                             | `avatar: File`                          |
+| `Form`       | Кладет в форму запроса                                 | `avatar: Form[str]`                     |
 | `Header`     | Заголовок запроса                                      | `auth: Header[str]`                     |
 | `QueryParam` | Параметр URL (?key=value)                              | `page: QueryParam[int]`                 |
 | `UrlVar`     | Переменная пути URL (/end/{param})                     | `id: UrlVar[int]`                       |

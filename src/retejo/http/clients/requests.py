@@ -1,7 +1,7 @@
-import urllib.parse
 from collections.abc import Mapping, MutableMapping
 from json import JSONDecodeError
 from typing import IO, Any, cast
+from urllib.parse import urljoin
 
 from requests import RequestException, Response, Session
 
@@ -38,23 +38,29 @@ class RequestsClient(SyncHttpClient[Response]):
         self,
         request: HttpRequest,
     ) -> HttpResponse[Response]:
-        if request.files is not None:
-            files = {file_key: self.file_obj_converter(file_key, file) for file_key, file in request.files.items()}
+        if request.form is not None:  # noqa: WPS504
+            data = {}
+            for key, value in request.form.items():
+                if isinstance(value, FileObj):
+                    data[key] = self.file_obj_converter(key, value)
+                else:
+                    data[key] = value
+
         else:
-            files = None
+            data = None
 
         response = self._session.request(
             method=request.http_method,
-            url=urllib.parse.urljoin(self._base_url, request.url),
+            url=urljoin(self._base_url, request.url),
             params=request.query_params,
             json=request.body,
-            files=files,
+            data=data,
             headers=request.headers,
         )
-        data = self.retrieve_response_data(response)
+        response_data = self.retrieve_response_data(response)
 
         return HttpResponse(
-            data=data,
+            data=response_data,
             status_code=response.status_code,
             raw=response,
         )
@@ -62,21 +68,21 @@ class RequestsClient(SyncHttpClient[Response]):
     def file_obj_converter(
         self,
         file_key: str,
-        file: FileObj,
-    ) -> tuple[str, str | IO[bytes], str]:
+        file_obj: FileObj,
+    ) -> tuple[str, str | bytes | IO[bytes], str]:
         return (
-            file.filename or file_key,
-            file.contents,
-            cast("str", file.content_type),
+            file_obj.filename or file_key,
+            file_obj.contents,
+            cast("str", file_obj.content_type),
         )
 
     def retrieve_response_data(self, raw_response: Response) -> Any:
         try:
             return raw_response.json()
-        except RequestException as e:
-            raise IntegrationError from e
-        except JSONDecodeError as e:
-            raise MalformedResponseError from e
+        except RequestException as error:
+            raise IntegrationError from error
+        except JSONDecodeError as error:
+            raise MalformedResponseError from error
 
     def close(self) -> None:
         self._session.close()

@@ -53,11 +53,11 @@ class ParentsResolver:
         return list(self._resolve_parents(child_type))
 
     def _resolve_parents(self, tp: TypeHint) -> Iterable[TypeHint]:
-        result = [tp]
+        parents = [tp]
         for parent in self._fetch_parents(tp):
             if not is_ignored_type(parent):
-                result.extend(self._resolve_parents(parent))
-        return result
+                parents.extend(self._resolve_parents(parent))
+        return parents
 
     def _fetch_parents(self, tp: TypeHint) -> list[TypeHint]:
         if is_parametrized(tp):
@@ -90,32 +90,32 @@ class ParentsResolver:
         type_vars: TypeArgsTuple,
         args: TypeArgsTuple,
     ) -> dict[TypeHint, TypeArgsTuple]:
-        result = {}
+        type_var_map = {}
         idx = 0
         len_args = len(args)
         len_type_vars = len(type_vars)
         for tv in type_vars:
             if HAS_TV_TUPLE and isinstance(tv, typing.TypeVarTuple):  # type: ignore[attr-defined, unused-ignore]
                 tuple_len = len_args - len_type_vars + 1
-                result[tv] = args[idx : idx + tuple_len]
+                type_var_map[tv] = args[idx : idx + tuple_len]
                 idx += tuple_len
             else:
-                result[tv] = (args[idx],)
+                type_var_map[tv] = (args[idx],)
                 idx += 1
 
-        return result
+        return type_var_map
 
     def _parametrize_by_dict(
         self,
         type_var_to_actual: dict[TypeHint, TypeArgsTuple],
         tp: TypeHint,
     ) -> TypeHint:
-        params = get_type_vars_of_parametrized(tp)
-        if not params:
+        type_vars = get_type_vars_of_parametrized(tp)
+        if not type_vars:
             return tp
         return tp[
             tuple(
-                chain.from_iterable(type_var_to_actual[type_var] for type_var in params),
+                chain.from_iterable(type_var_to_actual[type_var] for type_var in type_vars),
             )
         ]
 

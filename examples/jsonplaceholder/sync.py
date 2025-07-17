@@ -39,7 +39,7 @@ def main() -> None:
     with Client() as client:
         print(client.list_posts())
         print(client.get_post(id=84))
-        print(client.delete_post(id=84))  # type: ignore[func-returns-value]
+        print(client.delete_post(id=84))
         print(
             client.create_post(
                 user_id=10,
@@ -48,7 +48,7 @@ def main() -> None:
             )
         )
         print(client.get_httpbin())
-        print(client.upload_image(file=FileObj(open("sync.py", "rb"))))
+        print(client.upload_image(file=FileObj(open("sync.py", "rb").read())))
 
 
 logging.basicConfig(level=logging.DEBUG)

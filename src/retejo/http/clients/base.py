@@ -1,20 +1,39 @@
 from abc import abstractmethod
 from types import NoneType
-from typing import Any, Generic, TypeVar
+from typing import Any, Final, Generic, TypeVar
 
-from adaptix import Omitted, Retort, as_is_dumper, as_sentinel
+from adaptix import Provider, Retort, as_is_dumper, as_sentinel
+from adaptix._internal.provider.provider_wrapper import ConcatProvider
 
 from retejo.core.clients import AsyncClient, SyncClient
 from retejo.core.entities import RequestContextProxy
+from retejo.core.markers import Omitted
 from retejo.http import loggers
 from retejo.http.entities import FileObj, HttpMethod, HttpRequest, HttpResponse
 from retejo.http.errors import ClientError, ServerError
-from retejo.http.markers import BodyMarker, FileMarker, HeaderMarker, QueryParamMarker, UrlVarMarker
+from retejo.http.markers import BodyMarker, FormMarker, HeaderMarker, QueryParamMarker, UrlVarMarker
 from retejo.utils._fixed_type_hint_tags_unwrapping_provider import FixedTypeHintTagsUnwrappingProvider
-from retejo.utils.method_dumper import method_dumper
+from retejo.utils.method_provider import method_provider
+
+SERVER_ERROR_MIN_STATUS_CODE: Final = 500
+CLIENT_ERROR_MIN_STATUS_CODE: Final = 400
 
 _MethodResultT = TypeVar("_MethodResultT")
 _RawResponseT = TypeVar("_RawResponseT")
+
+
+def default_method_dumper() -> Provider:
+    return ConcatProvider(
+        method_provider(),
+        as_is_dumper(FileObj),
+    )
+
+
+def default_response_loader() -> Provider:
+    return ConcatProvider(
+        as_sentinel(Omitted),
+        FixedTypeHintTagsUnwrappingProvider(),
+    )
 
 
 class BaseHttpClient:
@@ -30,20 +49,12 @@ class BaseHttpClient:
     def init_method_dumper(self) -> Retort:
         return Retort(
             recipe=[
-                as_sentinel(Omitted),
-                as_is_dumper(FileObj),
-                method_dumper(),
-                FixedTypeHintTagsUnwrappingProvider(),
+                default_method_dumper(),
             ]
         )
 
     def init_response_loader(self) -> Retort:
-        return Retort(
-            recipe=[
-                as_sentinel(Omitted),
-                FixedTypeHintTagsUnwrappingProvider(),
-            ]
-        )
+        return Retort(recipe=[default_response_loader()])
 
     def method_to_request(self, method: HttpMethod[Any]) -> HttpRequest:
         request_context = RequestContextProxy(self.method_dumper.dump(method))
@@ -60,7 +71,7 @@ class BaseHttpClient:
             body=request_context.get(BodyMarker),
             headers=request_context.get(HeaderMarker),
             query_params=request_context.get(QueryParamMarker),
-            files=request_context.get(FileMarker),
+            form=request_context.get(FormMarker),
             context=request_context,
         )
 
@@ -73,7 +84,6 @@ class BaseHttpClient:
             return None  # type: ignore[return-value]
 
         return self.response_loader.load(response.data, method_result)
-
 
 
 class SyncHttpClient(
@@ -117,15 +127,14 @@ class SyncHttpClient(
     ) -> None:
         loggers.response.debug("Received %r", response)
 
-        if response.status_code >= 400:
+        if response.status_code >= CLIENT_ERROR_MIN_STATUS_CODE:
             self.handle_error_response(response)
 
     def handle_error_response(self, response: HttpResponse[_RawResponseT]) -> None:
-        if 400 <= response.status_code < 500:
+        if CLIENT_ERROR_MIN_STATUS_CODE <= response.status_code < SERVER_ERROR_MIN_STATUS_CODE:
             raise ClientError(response.status_code)
         else:
             raise ServerError(response.status_code)
-
 
 
 class AsyncHttpClient(
@@ -169,11 +178,11 @@ class AsyncHttpClient(
     ) -> None:
         loggers.response.debug("Received %s", response)
 
-        if response.status_code >= 400:
+        if response.status_code >= CLIENT_ERROR_MIN_STATUS_CODE:
             await self.handle_error_response(response)
 
     async def handle_error_response(self, response: HttpResponse[_RawResponseT]) -> None:
-        if 400 <= response.status_code < 500:
+        if CLIENT_ERROR_MIN_STATUS_CODE <= response.status_code < SERVER_ERROR_MIN_STATUS_CODE:
             raise ClientError(response.status_code)
         else:
             raise ServerError(response.status_code)

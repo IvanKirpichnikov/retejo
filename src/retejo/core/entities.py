@@ -11,17 +11,17 @@ from retejo.utils.parents_resolver import ParentsResolver
 
 
 class RequestContextProxy:
-    def __init__(self, data: Mapping[Any, Any]) -> None:
-        self._data = data
+    def __init__(self, request_context: Mapping[Any, Any]) -> None:
+        self._request_context = request_context
+
+    def __getitem__(self, key: str | type[BaseMarker]) -> Any:
+        return self._request_context[self._make_key(key)]
+
+    def get(self, key: str | type[BaseMarker], default: Any | None = None) -> Any:
+        return self._request_context.get(self._make_key(key), default)
 
     def _make_key(self, key: str | type[BaseMarker]) -> str:
         return key if isinstance(key, str) else key.name
-
-    def __getitem__(self, key: str | type[BaseMarker]) -> Any:
-        return self._data[self._make_key(key)]
-
-    def get(self, key: str | type[BaseMarker], default: Any | None = None) -> Any:
-        return self._data.get(self._make_key(key), default)
 
 
 _ClsT = TypeVar("_ClsT")
@@ -73,7 +73,12 @@ def get_generic_param(
 
 @dataclass_transform(frozen_default=True, kw_only_default=True)
 class MethodMetaClass(type):
-    def __new__(cls, name: str, bases: tuple[type, ...], namespace: dict[str, Any]) -> Any:
+    def __new__(
+        cls,
+        name: str,
+        bases: tuple[type, ...],
+        namespace: dict[str, Any],
+    ) -> Any:
         class_: Any = super().__new__(cls, name, bases, namespace)
 
         try:
@@ -82,9 +87,9 @@ class MethodMetaClass(type):
                 slots=True,
                 kw_only=True,
             )(class_)
-        except TypeError as e:
+        except TypeError as error:
             # checking that an object has not been decorated with a dataclass
-            if "Cannot overwrite attribute __setattr__ in class" not in e.args[0]:
+            if "Cannot overwrite attribute __setattr__ in class" not in error.args[0]:
                 raise
 
         if class_.__name__ != "Method" or class_.__module__ != __name__:

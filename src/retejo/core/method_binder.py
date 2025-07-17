@@ -19,36 +19,36 @@ class _BindMethod(Generic[_MethodParamSpec, _MethodResultT]):
     @overload
     def __get__(
         self,
-        obj: SyncSendableMethod[Any],
-        objtype: Any = None,
+        instance: SyncSendableMethod[Any],
+        owner: Any = None,
     ) -> Callable[_MethodParamSpec, _MethodResultT]: ...
 
     @overload
     def __get__(
         self,
-        obj: AsyncSendableMethod[Any],
-        objtype: Any = None,
+        instance: AsyncSendableMethod[Any],
+        owner: Any = None,
     ) -> Callable[_MethodParamSpec, Awaitable[_MethodResultT]]: ...
 
     @overload
     def __get__(
         self,
-        obj: Any,
-        objtype: Any = None,
+        instance: Any,
+        owner: Any = None,
     ) -> NoReturn: ...
 
     def __get__(
         self,
-        obj: Any,
-        objtype: Any = None,
+        instance: Any,
+        owner: Any = None,
     ) -> Any:
-        if not isinstance(obj, (AsyncSendableMethod, SyncSendableMethod)):
+        if not isinstance(instance, (AsyncSendableMethod, SyncSendableMethod)):
             raise RuntimeError("bind_method use is only AsyncClient or SyncClient interfaces")
 
-        if inspect.iscoroutinefunction(obj.send_method):
-            async_client = obj
+        if inspect.iscoroutinefunction(instance.send_method):
+            async_client = instance
 
-            async def async_wrapper(
+            async def async_wrapper(  # noqa: WPS430
                 *args: _MethodParamSpec.args,
                 **kwargs: _MethodParamSpec.kwargs,
             ) -> _MethodResultT:
@@ -56,9 +56,9 @@ class _BindMethod(Generic[_MethodParamSpec, _MethodResultT]):
 
             return async_wrapper
         else:
-            sync_client = cast("SyncSendableMethod[Any]", obj)
+            sync_client = cast("SyncSendableMethod[Any]", instance)
 
-            def sync_wrapper(
+            def sync_wrapper(  # noqa: WPS430
                 *args: _MethodParamSpec.args,
                 **kwargs: _MethodParamSpec.kwargs,
             ) -> _MethodResultT:

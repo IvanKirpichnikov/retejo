@@ -12,8 +12,8 @@ class BodyMarker(BaseHttpMarker):
     name = "Body"
 
 
-class FileMarker(BaseHttpMarker):
-    name = "File"
+class FormMarker(BaseHttpMarker):
+    name = "Form"
 
 
 class HeaderMarker(BaseHttpMarker):
@@ -31,7 +31,7 @@ class UrlVarMarker(BaseHttpMarker):
 _MarkerValueT = TypeVar("_MarkerValueT")
 
 Body: TypeAlias = Annotated[_MarkerValueT, BodyMarker()]
-File: TypeAlias = Annotated[_MarkerValueT, FileMarker()]
+Form: TypeAlias = Annotated[_MarkerValueT, FormMarker()]
 Header: TypeAlias = Annotated[_MarkerValueT, HeaderMarker()]
 QueryParam: TypeAlias = Annotated[_MarkerValueT, QueryParamMarker()]
 UrlVar: TypeAlias = Annotated[_MarkerValueT, UrlVarMarker()]

@@ -7,7 +7,7 @@ from retejo.core.entities import Method, Request, Response, retejo_request, rete
 
 @dataclass(slots=True, frozen=True)
 class FileObj:
-    contents: str | IO[bytes]
+    contents: str | bytes | IO[bytes]
     content_type: str | None = None
     filename: str | None = None
 
@@ -19,7 +19,7 @@ class HttpRequest(Request):
     body: Mapping[str, str] | None = None
     headers: Mapping[str, str] | None = None
     query_params: Mapping[str, str] | None = None
-    files: Mapping[str, FileObj] | None = None
+    form: Mapping[str, Any] | None = None
 
 
 _RawResponseT = TypeVar("_RawResponseT")

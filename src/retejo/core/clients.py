@@ -15,6 +15,8 @@ _RequestT_contra = TypeVar("_RequestT_contra", bound=Request, contravariant=True
 
 @runtime_checkable
 class SyncSendableMethod(Protocol[_MethodT_contra]):
+    __slots__ = ()
+
     @abstractmethod
     def send_method(
         self,
@@ -94,6 +96,8 @@ class SyncClient(
 
 @runtime_checkable
 class AsyncSendableMethod(Protocol[_MethodT_contra]):
+    __slots__ = ()
+
     @abstractmethod
     async def send_method(
         self,
@@ -128,18 +132,6 @@ class AsyncClient(
       |_ method_result_converter
     """
     __slots__ = ()
-
-    @abstractmethod
-    async def send_method(
-        self,
-        method: _MethodT_contra,
-    ) -> _MethodResultT:
-        """
-        Send method.
-
-        Responsible for sending the request and converting the response into a method result
-        """
-        raise NotImplementedError
 
     @abstractmethod
     async def handle_method(self, method: _MethodT_contra) -> None:

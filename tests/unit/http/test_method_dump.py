@@ -1,15 +1,15 @@
 from typing import Any
 
 import pytest
-from adaptix import P, Retort, as_is_dumper, as_sentinel, dumper, name_mapping
+from adaptix import P, Retort, dumper, name_mapping
 
 from retejo.core.markers import Omittable, Omitted
-from retejo.http.entities import FileObj, HttpMethod
+from retejo.http.entities import HttpMethod
 from retejo.http.markers import (
     Body,
     BodyMarker,
-    File,
-    FileMarker,
+    Form,
+    FormMarker,
     Header,
     HeaderMarker,
     QueryParam,
@@ -17,16 +17,12 @@ from retejo.http.markers import (
     UrlVar,
     UrlVarMarker,
 )
-from retejo.utils._fixed_type_hint_tags_unwrapping_provider import FixedTypeHintTagsUnwrappingProvider
 from retejo.utils.for_marker import for_marker
-from retejo.utils.method_dumper import method_dumper
+from retejo.utils.method_provider import method_provider
 
 retort = Retort(
     recipe=[
-        as_sentinel(Omitted),
-        as_is_dumper(FileObj),
-        method_dumper(),
-        FixedTypeHintTagsUnwrappingProvider(),
+        method_provider(),
     ]
 )
 
@@ -36,7 +32,7 @@ class ConcreteMethod(HttpMethod[Any]):
 
     omitted_body: Body[Omittable[Any]] = Omitted()
     body: Body[Any]
-    file: File[Any]
+    file: Form[Any]
     query_param: QueryParam[str | None] = None
     url_var: UrlVar[Any]
     header: Header[Any]
@@ -56,7 +52,7 @@ class ConcreteMethod(HttpMethod[Any]):
             ),
             {
                 BodyMarker.name: {"body": None, "omitted_body": None},
-                FileMarker.name: {"file": None},
+                FormMarker.name: {"file": None},
                 HeaderMarker.name: {"header": None},
                 QueryParamMarker.name: {"query_param": None},
                 UrlVarMarker.name: {"url_var": None},
@@ -74,7 +70,7 @@ class ConcreteMethod(HttpMethod[Any]):
             ),
             {
                 BodyMarker.name: {"body": None},
-                FileMarker.name: {"file": None},
+                FormMarker.name: {"file": None},
                 HeaderMarker.name: {"token": None},
                 QueryParamMarker.name: {"query_param": None},
                 UrlVarMarker.name: {"url_var": None},
@@ -101,7 +97,7 @@ class ConcreteMethod(HttpMethod[Any]):
             ),
             {
                 BodyMarker.name: {"body": None},
-                FileMarker.name: {"file": None},
+                FormMarker.name: {"file": None},
                 HeaderMarker.name: {"token": None},
                 QueryParamMarker.name: {"query_param": "null"},
                 UrlVarMarker.name: {"url_var": None},

@@ -13,13 +13,11 @@ class ForMarkerLocStackChecker(LocStackChecker):
         marker: type[BaseMarker],
         subclass: bool = False,
     ) -> None:
-        self.loc_stack_checker = loc_stack_checker
         self.marker = marker
         self.subclass = subclass
+        self.loc_stack_checker = loc_stack_checker
 
     def check_loc_stack(self, mediator: DirectMediator, loc_stack: LocStack[OutputFieldLoc]) -> bool:
-        # print(loc_stack)j
-
         try:
             owner_loc, field_loc = find_owner_with_field(loc_stack)
         except ValueError:
@@ -39,7 +37,7 @@ class ForMarkerLocStackChecker(LocStackChecker):
         if self.subclass:
             return issubclass(type(marker), self.marker)
         else:
-            return type(marker) is self.marker
+            return type(marker) is self.marker  # noqa: WPS516
 
 
 def for_marker(

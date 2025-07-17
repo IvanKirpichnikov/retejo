@@ -108,6 +108,7 @@ line-length = 120
 target-version = "py310"
 
 [tool.ruff.lint]
+external = ['WPS']
 select = [
     "E",     # pycodestyle errors     https://docs.astral.sh/ruff/rules/#error-e
     "W",     # pycodestyle warnings   https://docs.astral.sh/ruff/rules/#warning-w

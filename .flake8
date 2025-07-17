@@ -1,0 +1,12 @@
+[flake8]
+exclude =
+    src/retejo/_type_tools
+
+ignore = 
+    WPS210
+    WPS214
+    WPS458
+    WPS202
+    WPS110
+    WPS201
+    WPS410

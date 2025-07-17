@@ -40,7 +40,7 @@ async def main() -> None:
     async with AsyncClient() as client:
         # print(await client.list_posts())
         print(await client.get_post(id=84))
-        print(await client.delete_post(id=84))  # type: ignore[func-returns-value]
+        print(await client.delete_post(id=84))
         print(
             await client.create_post(
                 user_id=10,

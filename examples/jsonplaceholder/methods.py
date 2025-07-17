@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Any
 
-from retejo.http.markers import Body, File, QueryParam, UrlVar
+from retejo.http.markers import Body, Form, QueryParam, UrlVar
 from retejo.http.entities import HttpMethod, FileObj
 
 @dataclass
@@ -54,4 +54,4 @@ class UploadImage(HttpMethod[Any]):
     __url__ = "https://httpbin.org/post"
     __http_method__ = "post"
 
-    file: File[FileObj]
+    file: Form[FileObj]

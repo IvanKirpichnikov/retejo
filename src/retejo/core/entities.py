@@ -1,14 +1,13 @@
 from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import Any, ClassVar, Generic, TypeVar
+from typing import Any, ClassVar, Final, Generic, TypeVar
 
 from typing_extensions import dataclass_transform
 
-from retejo._type_tools.common import TypeHint
-from retejo._type_tools.fundamentals import get_generic_args, strip_alias
 from retejo.core.markers import BaseMarker
-from retejo.utils.parents_resolver import ParentsResolver
+from retejo.utils.get_generic_param import get_generic_param
 
+_DATACLASS_FIELDS: Final = '__dataclass_fields__'
 
 class RequestContextProxy:
     def __init__(self, request_context: Mapping[Any, Any]) -> None:
@@ -55,22 +54,6 @@ class Response:
     """Base retejo response class."""
 
 
-def get_generic_param(
-    tp: TypeHint,
-    module_name: str,
-    parent_name: str,
-    position_param: int,
-    param_name: str,
-) -> TypeHint:
-    parents = ParentsResolver().get_parents(tp)
-    for parent in parents:
-        origin_tp = strip_alias(parent)
-        if origin_tp.__name__ == parent_name and origin_tp.__module__ == module_name:
-            return get_generic_args(parent)[position_param]
-
-    raise RuntimeError(f"Not found type for {param_name!r} param by {tp!r}")
-
-
 @dataclass_transform(frozen_default=True, kw_only_default=True)
 class MethodMetaClass(type):
     def __new__(
@@ -81,16 +64,15 @@ class MethodMetaClass(type):
     ) -> Any:
         class_: Any = super().__new__(cls, name, bases, namespace)
 
-        try:
-            class_ = dataclass(
-                frozen=True,
-                slots=True,
-                kw_only=True,
-            )(class_)
-        except TypeError as error:
-            # checking that an object has not been decorated with a dataclass
-            if "Cannot overwrite attribute __setattr__ in class" not in error.args[0]:
-                raise
+        # checking that an object has not been decorated with a dataclass
+        if _DATACLASS_FIELDS in class_.__dict__:
+            return class_
+
+        class_ = dataclass(
+            frozen=True,
+            slots=True,
+            kw_only=True,
+        )(class_)
 
         if class_.__name__ != "Method" or class_.__module__ != __name__:
             class_.__result__ = get_generic_param(

@@ -5,7 +5,7 @@ build-backend = "uv_build"
 [project]
 name = "retejo"
 description = "Modern python http client"
-version = "1.0.0"
+version = "0.0.5"
 readme = "README.md"
 authors = [
     { name = "Ivan Kirpichnikov", email = "mmssvvvv570@gmail.com" }

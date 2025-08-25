@@ -1,13 +1,18 @@
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any, ClassVar, Final, Generic, TypeVar
 
-from typing_extensions import dataclass_transform
+from typing_extensions import (
+    Generic as GenericExtensions,
+    TypeVar as TypeVarExtensions,
+    dataclass_transform,
+)
 
+from retejo._internal.type_tools.get_generic_param import get_generic_param
 from retejo.core.markers import BaseMarker
-from retejo.utils.get_generic_param import get_generic_param
 
-_DATACLASS_FIELDS: Final = '__dataclass_fields__'
+_DATACLASS_FIELDS: Final = "__dataclass_fields__"
+
 
 class RequestContextProxy:
     def __init__(self, request_context: Mapping[Any, Any]) -> None:
@@ -23,35 +28,34 @@ class RequestContextProxy:
         return key if isinstance(key, str) else key.name
 
 
-_ClsT = TypeVar("_ClsT")
-
-
-@dataclass_transform(kw_only_default=True)
-def retejo_request(cls: type[_ClsT]) -> type[_ClsT]:
-    return dataclass(
-        slots=True,
-        kw_only=True,
-    )(cls)
-
-
-@dataclass_transform(kw_only_default=True)
-def retejo_response(cls: type[_ClsT]) -> type[_ClsT]:
-    return dataclass(
-        slots=True,
-        kw_only=True,
-    )(cls)
-
-
-@retejo_request
 class Request:
     """Base retejo request class."""
 
-    context: RequestContextProxy
+    __slots__ = ("_context",)
+
+    def __init__(self, context: RequestContextProxy) -> None:
+        self._context = context
+
+    @property
+    def context(self) -> RequestContextProxy:
+        return self._context
 
 
-@retejo_response
 class Response:
     """Base retejo response class."""
+
+    __slots__ = ()
+
+
+_SequenceResultT = TypeVar("_SequenceResultT")
+
+
+@dataclass(slots=True)
+class SequenceResult(Generic[_SequenceResultT]):
+    result: Sequence[_SequenceResultT]
+
+
+class _AnyResult: ...
 
 
 @dataclass_transform(frozen_default=True, kw_only_default=True)
@@ -76,14 +80,18 @@ class MethodMetaClass(type):
 
         if class_.__name__ != "Method" or class_.__module__ != __name__:
             class_.__result__ = get_generic_param(
-                tp=class_, module_name=__name__, parent_name="Method", position_param=0, param_name="__result__"
+                tp=class_,
+                module_name=__name__,
+                parent_name="Method",
+                position_param=0,
+                param_name="__result__",
             )
 
         return class_
 
 
-_MethodResultT = TypeVar("_MethodResultT")
+_MethodResultT = TypeVarExtensions("_MethodResultT", default=_AnyResult)
 
 
-class Method(Generic[_MethodResultT], metaclass=MethodMetaClass):
+class Method(GenericExtensions[_MethodResultT], metaclass=MethodMetaClass):
     __result__: ClassVar[type[_MethodResultT]]  # type: ignore[misc]

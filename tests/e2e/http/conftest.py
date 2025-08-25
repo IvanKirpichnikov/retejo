@@ -1,6 +1,6 @@
 from dataclasses import dataclass
-from typing import Any
 
+from retejo.core.entities import SequenceResult
 from retejo.http.entities import FileObj, HttpMethod
 from retejo.http.markers import Body, Form, UrlVar
 
@@ -25,7 +25,7 @@ class GetPost(HttpMethod[Post]):
     id: UrlVar[int]
 
 
-class ListPosts(HttpMethod[list[Post]]):
+class ListPosts(HttpMethod[SequenceResult[Post]]):
     __url__ = "posts"
     __http_method__ = "get"
 
@@ -46,7 +46,7 @@ class CreatePost(HttpMethod[PostId]):
     body: Body[str]
 
 
-class UploadImage(HttpMethod[Any]):
+class UploadImage(HttpMethod):
     __url__ = "https://httpbin.org/post"
     __http_method__ = "post"
 

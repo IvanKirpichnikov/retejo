@@ -1,8 +1,9 @@
 from adaptix import NameStyle, Retort, name_mapping
+from typing_extensions import override
 
-from retejo.core.method_binder import bind_method
+from retejo.core import AdaptixFactory, Factory, bind_method
+from retejo.http import FileObj, http_response_loader_provider
 from retejo.http.clients.aiohttp import AiohttpClient
-from retejo.http.entities import FileObj
 from tests.e2e.http.conftest import CreatePost, DeletePost, GetPost, ListPosts, PostId, UploadImage
 
 
@@ -10,13 +11,15 @@ class AsyncClient(AiohttpClient):
     def __init__(self) -> None:
         super().__init__("https://jsonplaceholder.typicode.com/")
 
-    def init_response_loader(self) -> Retort:
-        response_loader = super().init_response_loader()
-        return response_loader.extend(
+    @override
+    def init_response_loader(self) -> Factory:
+        retort = Retort(
             recipe=[
                 name_mapping(name_style=NameStyle.CAMEL),
+                http_response_loader_provider(),
             ],
         )
+        return AdaptixFactory(retort)
 
     get_post = bind_method(GetPost)
     list_posts = bind_method(ListPosts)

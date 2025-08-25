@@ -1,25 +1,28 @@
-from collections.abc import Mapping, MutableMapping
 from json import JSONDecodeError
 from typing import IO, Any, cast
 from urllib.parse import urljoin
 
 from requests import RequestException, Response, Session
+from typing_extensions import override
 
 from retejo.core.errors import IntegrationError
-from retejo.http.clients.base import SyncHttpClient
+from retejo.http.clients.sync import SyncHttpClient
 from retejo.http.entities import FileObj, HttpRequest, HttpResponse
 from retejo.http.errors import MalformedResponseError
+from retejo.http.logger_state import HttpLoggerState
 
 
 class RequestsClient(SyncHttpClient[Response]):
     def __init__(
         self,
-        base_url: str,
+        base_url: str = "",
         session: Session | None = None,
-        cookies: Mapping[str, Any] | None = None,
-        headers: Mapping[str, str] | None = None,
+        logger_state: HttpLoggerState | None = None,
     ) -> None:
-        super().__init__()
+        if logger_state is None:
+            logger_state = HttpLoggerState()
+
+        super().__init__(logger_state)
 
         self._base_url = base_url
 
@@ -28,12 +31,7 @@ class RequestsClient(SyncHttpClient[Response]):
         else:
             self._session = session
 
-        if headers is not None:
-            self._session.headers.update(headers)
-        if cookies is not None:
-            session_cookies: MutableMapping[Any, Any] = self._session.cookies
-            session_cookies.update(cookies)
-
+    @override
     def send_request(
         self,
         request: HttpRequest,
@@ -61,6 +59,8 @@ class RequestsClient(SyncHttpClient[Response]):
 
         return HttpResponse(
             data=response_data,
+            headers=response.headers,
+            cookies=response.cookies,
             status_code=response.status_code,
             raw=response,
         )
@@ -76,6 +76,7 @@ class RequestsClient(SyncHttpClient[Response]):
             cast("str", file_obj.content_type),
         )
 
+    @override
     def retrieve_response_data(self, raw_response: Response) -> Any:
         try:
             return raw_response.json()
@@ -84,5 +85,6 @@ class RequestsClient(SyncHttpClient[Response]):
         except JSONDecodeError as error:
             raise MalformedResponseError from error
 
+    @override
     def close(self) -> None:
         self._session.close()

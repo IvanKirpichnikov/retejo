@@ -39,8 +39,8 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-requests = [ "requests~=2.27.0" ]
-aiohttp = [ "aiohttp~=3.10.0" ]
+requests = [ "requests>=2.27.0" ]
+aiohttp = [ "aiohttp>=3.10.0" ]
 
 [dependency-groups]
 integrations = [ "retejo[aiohttp, requests]" ]
@@ -49,19 +49,19 @@ types = [ "types-requests" ]
 
 lint = [
     { include-group = "types" },
-    "mypy~=1.16.1",
-    "ruff~=0.11.13",
-    "codespell~=2.4.1",
-    "bandit~=1.8.5",
+    "mypy==1.16.1",
+    "ruff==0.11.13",
+    "codespell==2.4.1",
+    "bandit==1.8.5",
     "slotscheck==0.19.1",
 ]
 
 tests = [
-    "pytest~=8.4.1",
-    "pytest-asyncio~=1.0.0",
-    "pytest-xdist~=3.7.0",
-    "pytest-cov~=6.2.1",
-    "coverage~=7.9.1",
+    "pytest==8.4.1",
+    "pytest-asyncio==1.0.0",
+    "pytest-xdist==3.7.0",
+    "pytest-cov==6.2.1",
+    "coverage==7.9.1",
 ]
 
 docs = [
@@ -85,9 +85,22 @@ dev = [
 ]
 
 [tool.mypy]
-files = ["src", "tests"]
+files = ["src", "tests", "examples"]
 exclude = [
-    "src/retejo/_type_tools/*",
+    "src/retejo/_internal/type_tools/",
+]
+enable_error_code = [
+  "truthy-bool",
+  "truthy-iterable",
+  "redundant-expr",
+  "unused-awaitable",
+  "ignore-without-code",
+  "possibly-undefined",
+  "redundant-self",
+  "explicit-override",
+  "mutable-override",
+  "unimported-reveal",
+  "deprecated",
 ]
 strict = true
 
@@ -100,11 +113,11 @@ strict = true
 include = [
     "src/retejo/**/*.py",
     "tests/**/*.py",
-    "pyproject.toml"
+    "pyproject.toml",
+    "examples/**.py",
 ]
-exclude = ["src/retejo/_type_tools/**"]
-fix = true
-line-length = 120
+exclude = ["src/retejo/_internal/type_tools/*"]
+line-length = 100
 target-version = "py310"
 
 [tool.ruff.lint]
@@ -159,6 +172,10 @@ ignore = [
     "TC002",
 
     "UP038",
+
+    "B008",
+
+    "UP035",
 ]
 
 
@@ -182,7 +199,7 @@ parallel = true
 branch = true
 concurrency = ["multiprocessing", "thread"]
 source = ["tests"]
-omit = ["src/retejo/_type_tools/**"]
+omit = ["src/retejo/_internal/type_tools/**"]
 
 [tool.coverage.report]
 show_missing = true
@@ -206,9 +223,9 @@ exclude_also = [
 strict-imports = true
 exclude-modules = '''
 (
-  (^|\.)_type_tools  # ignore retejo._type_tools
+  (^|\.)type_tools  # ignore retejo._internal.type_tools
 )
 '''
 
 [tool.bandit]
-exclude_dirs = ["src/retejo/_type_tools"]
+exclude_dirs = ["src/retejo/_internal/type_tools"]

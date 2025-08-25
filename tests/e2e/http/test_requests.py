@@ -1,29 +1,27 @@
 from adaptix import NameStyle, Retort, name_mapping
+from typing_extensions import override
 
-from examples.jsonplaceholder.methods import (
-    CreatePost,
-    DeletePost,
-    GetPost,
-    ListPosts,
-    PostId,
-    UploadImage,
-)
+from retejo.core.factory import AdaptixFactory, Factory
 from retejo.core.method_binder import bind_method
 from retejo.http.clients.requests import RequestsClient
 from retejo.http.entities import FileObj
+from retejo.http.providers import http_response_loader_provider
+from tests.e2e.http.conftest import CreatePost, DeletePost, GetPost, ListPosts, PostId, UploadImage
 
 
 class AsyncClient(RequestsClient):
     def __init__(self) -> None:
         super().__init__("https://jsonplaceholder.typicode.com/")
 
-    def init_response_loader(self) -> Retort:
-        response_loader = super().init_response_loader()
-        return response_loader.extend(
+    @override
+    def init_response_loader(self) -> Factory:
+        retort = Retort(
             recipe=[
+                http_response_loader_provider(),
                 name_mapping(name_style=NameStyle.CAMEL),
             ],
         )
+        return AdaptixFactory(retort)
 
     get_post = bind_method(GetPost)
     list_posts = bind_method(ListPosts)

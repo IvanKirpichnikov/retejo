@@ -1,6 +1,6 @@
 [flake8]
 exclude =
-    src/retejo/_type_tools
+    src/retejo/_internal
 
 ignore = 
     WPS210
@@ -10,3 +10,9 @@ ignore =
     WPS110
     WPS201
     WPS410
+    WPS412
+    WPS404
+    WPS604
+    WPS234
+    WPS235
+    WPS226

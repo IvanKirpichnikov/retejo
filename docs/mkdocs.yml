@@ -5,7 +5,6 @@ repo_url: https://github.com/IvanKirpichnikov/retejo
 repo_name: IvanKirpichnikov/retejo
 
 docs_dir: docs
-
 theme:
   name: material
   icon:
@@ -42,36 +41,38 @@ theme:
         name: Switch to light mode
 
 plugins:
+  - search:
+  - autorefs:
+  - mkdocstrings:
+      handlers:
+          python:
+            paths: [../]
+            options:
+              show_bases: false
+              show_symbol_type_heading: true
+              modernize_annotations: true
+
   - i18n:
       docs_structure: folder
       reconfigure_material: true
       reconfigure_search: true
       languages:
         - locale: ru
-          default: true
           name: Русский
+          default: true
           build: true
           nav:
-            - Retejo: ru/index.md
-            - Туториал:
-              - Туториал: ru/tutorial/index.md
-              - Метод: ru/tutorial/method.md
-              - Клиент: ru/tutorial/client.md
-              - Маркеры: ru/tutorial/markers.md
-            - Интеграции:
-              - Интеграции: ru/integrations/index.md
-              - aiohttp: ru/integrations/aiohttp.md
-              - requests: ru/integrations/requests.md
-              - httpx: ru/integrations/httpx.md
-              - adaptix: ru/integrations/adaptix.md
-              - pydantic: ru/integrations/pydantic.md
-            - Внести вклад: ru/contribution.md
-
-
-        - locale: en
-          default: false
-          name: English
-          build: true
+            - Хэлло: ru/index.md
+            # - core:
+            #   - 
+            - Http:
+                - Быстрый старт: ru/http/quickstart.md
+                - Маркеры: ru/http/markers.md
+                - Сущности: ru/http/entities.md
+                - Маппинг данных: ru/http/mapping_data.md
+                - Интеграции:
+                  - aiohttp: ru/http/integrations/aiohttp.md
+                  - requests: ru/http/integrations/requests.md
 
 markdown_extensions:
   - toc:

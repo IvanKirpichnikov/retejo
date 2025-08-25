@@ -8,3 +8,6 @@ lint:
 
 format:
     ruff format
+
+tests:
+    pytest tests

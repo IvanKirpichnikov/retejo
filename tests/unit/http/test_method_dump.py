@@ -4,6 +4,7 @@ import pytest
 from adaptix import P, Retort, dumper, name_mapping
 
 from retejo.core.markers import Omittable, Omitted
+from retejo.core.method_provider import method_provider
 from retejo.http.entities import HttpMethod
 from retejo.http.markers import (
     Body,
@@ -17,8 +18,7 @@ from retejo.http.markers import (
     UrlVar,
     UrlVarMarker,
 )
-from retejo.utils.for_marker import for_marker
-from retejo.utils.method_provider import method_provider
+from retejo.marker_tools.for_marker import for_marker
 
 retort = Retort(
     recipe=[
@@ -111,7 +111,7 @@ class ConcreteMethod(HttpMethod[Any]):
                         },
                     ),
                     dumper(
-                        for_marker(P[None], QueryParamMarker),
+                        for_marker(QueryParamMarker, P[None]),
                         lambda x: "null",
                     ),
                 ],

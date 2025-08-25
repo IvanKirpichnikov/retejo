@@ -1,25 +1,31 @@
-from collections.abc import Mapping
 from json import JSONDecodeError
 from typing import Any
 from urllib.parse import urljoin
 
 from aiohttp import ClientError, ClientResponse, ClientSession, FormData
+from typing_extensions import override
 
 from retejo.core.errors import IntegrationError
-from retejo.http.clients.base import AsyncHttpClient
+from retejo.http.clients.async_ import AsyncHttpClient
 from retejo.http.entities import FileObj, HttpRequest, HttpResponse
 from retejo.http.errors import MalformedResponseError
+from retejo.http.logger_state import HttpLoggerState
 
 
 class AiohttpClient(AsyncHttpClient[ClientResponse]):
+    __slots__ = ("_base_url", "_session")
+
     def __init__(
         self,
-        base_url: str,
+        base_url: str = "",
         session: ClientSession | None = None,
-        cookies: Mapping[str, Any] | None = None,
-        headers: Mapping[str, str] | None = None,
+        logger_state: HttpLoggerState | None = None,
     ) -> None:
-        super().__init__()
+        if logger_state is None:
+            logger_state = HttpLoggerState()
+
+        super().__init__(logger_state)
+
         self._base_url = base_url
 
         if session is None:
@@ -27,11 +33,7 @@ class AiohttpClient(AsyncHttpClient[ClientResponse]):
         else:
             self._session = session
 
-        if headers is not None:
-            self._session.headers.update(headers)
-        if cookies is not None:
-            self._session.cookie_jar.update_cookies(cookies)
-
+    @override
     async def send_request(
         self,
         request: HttpRequest,
@@ -60,13 +62,15 @@ class AiohttpClient(AsyncHttpClient[ClientResponse]):
             data=form_data,
         ) as response:
             response_data = await self.retrieve_response_data(response)
-
             return HttpResponse(
                 raw=response,
                 data=response_data,
+                cookies=response.cookies,
+                headers=response.headers,
                 status_code=response.status,
             )
 
+    @override
     async def retrieve_response_data(self, raw_response: ClientResponse) -> Any:
         try:
             return await raw_response.json()
@@ -75,5 +79,6 @@ class AiohttpClient(AsyncHttpClient[ClientResponse]):
         except JSONDecodeError as error:
             raise MalformedResponseError from error
 
+    @override
     async def close(self) -> None:
         await self._session.close()

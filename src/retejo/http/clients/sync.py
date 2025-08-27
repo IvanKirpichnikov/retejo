@@ -51,6 +51,7 @@ class SyncHttpClient(
         self.handle_response(response)
 
         return self.load_method_result(
+            request=request,
             response=response,
             method_result=method.__result__,
         )

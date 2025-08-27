@@ -61,6 +61,7 @@ class BaseHttpClient:
 
     def load_method_result(
         self,
+        request: HttpRequest,
         response: HttpResponse[_RawResponseT],
         method_result: type[_MethodResultT],
     ) -> _MethodResultT:

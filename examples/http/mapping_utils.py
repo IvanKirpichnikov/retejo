@@ -8,6 +8,7 @@ from adaptix import P, Retort
 from typing_extensions import override
 
 from retejo.core import AdaptixFactory, Factory, Omittable, Omitted, bind_method
+from retejo.core.entities import AnyResult
 from retejo.http import (
     FileObj,
     Form,
@@ -35,7 +36,7 @@ class GetHttpBin(HttpMethod[GetHttpBinResult]):
     __http_method__ = "get"
 
 
-class UploadImage(HttpMethod[Any]):
+class UploadImage(HttpMethod[AnyResult]):
     __url__ = "post"
     __http_method__ = "post"
 

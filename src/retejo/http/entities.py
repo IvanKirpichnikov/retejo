@@ -4,7 +4,7 @@ from typing import IO, Any, ClassVar, Generic, TypeVar, TypedDict
 
 from typing_extensions import Generic as GenericExtensions, TypeVar as TypeVarExtensions
 
-from retejo.core.entities import Method, Request, RequestContextProxy, Response, _AnyResult
+from retejo.core.entities import AnyResult, Method, Request, RequestContextProxy, Response
 
 
 class ResponseLoadData(TypedDict, total=True):
@@ -121,7 +121,7 @@ class HttpResponse(Response, Generic[_RawResponseT]):
         return self._raw
 
 
-_MethodResultT = TypeVarExtensions("_MethodResultT", default=_AnyResult)
+_MethodResultT = TypeVarExtensions("_MethodResultT", default=AnyResult)
 
 
 class HttpMethod(Method[_MethodResultT], GenericExtensions[_MethodResultT]):

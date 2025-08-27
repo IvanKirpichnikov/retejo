@@ -3,7 +3,7 @@ from collections.abc import Awaitable, Callable, Sequence
 from typing import Any, Generic, ParamSpec, TypeVar, cast, overload
 
 from retejo.core.clients import AsyncSendableMethod, SyncSendableMethod
-from retejo.core.entities import Method, SequenceResult, _AnyResult
+from retejo.core.entities import AnyResult, Method, SequenceResult
 
 _MethodResultT = TypeVar("_MethodResultT")
 _MethodParamSpec = ParamSpec("_MethodParamSpec")
@@ -73,7 +73,7 @@ class _BindMethod(Generic[_MethodParamSpec, _MethodResultT]):
 
 @overload
 def bind_method(
-    method_tp: Callable[_MethodParamSpec, Method[_AnyResult]],
+    method_tp: Callable[_MethodParamSpec, Method[AnyResult]],
 ) -> _BindMethod[_MethodParamSpec, Any]: ...
 
 

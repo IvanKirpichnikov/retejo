@@ -14,6 +14,7 @@ def get_generic_param(
     for parent in parents:
         origin_tp = strip_alias(parent)
         if origin_tp.__name__ == parent_name and origin_tp.__module__ == module_name:
-            return get_generic_args(parent)[position_param]
+            generic_args = get_generic_args(parent)
+            return generic_args[position_param]
 
     raise RuntimeError(f"Not found type for {param_name!r} param by {tp!r}")

@@ -1,18 +1,17 @@
 # ruff: noqa: T201
 import logging
-from typing import Any
 
-from retejo.core import bind_method
+from retejo.core import AnyResult, bind_method
 from retejo.http import FileObj, Form, HttpMethod
 from retejo.http.clients.requests import RequestsClient
 
 
-class GetHttpBin(HttpMethod[Any]):
+class GetHttpBin(HttpMethod[AnyResult]):
     __url__ = "get"
     __http_method__ = "get"
 
 
-class UploadImage(HttpMethod[Any]):
+class UploadImage(HttpMethod[AnyResult]):
     __url__ = "post"
     __http_method__ = "post"
 

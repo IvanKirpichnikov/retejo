@@ -1,9 +1,11 @@
 from retejo.core.entities import (
+    AnyResult,
     Method,
     MethodMetaClass,
     Request,
     RequestContextProxy,
     Response,
+    SequenceResult,
 )
 from retejo.core.errors import (
     IntegrationError,
@@ -22,6 +24,7 @@ from retejo.core.method_provider import method_provider
 
 __all__ = (
     "AdaptixFactory",
+    "AnyResult",
     "BaseMarker",
     "Factory",
     "IntegrationError",
@@ -34,6 +37,7 @@ __all__ = (
     "RequestContextProxy",
     "Response",
     "RetejoError",
+    "SequenceResult",
     "UnmarkedFieldError",
     "bind_method",
     "method_provider",

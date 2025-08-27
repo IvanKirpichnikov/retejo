@@ -3,7 +3,8 @@ from typing import Any, Final, TypeVar, cast
 
 from adaptix import Retort
 
-from retejo.core.entities import RequestContextProxy, SequenceResult
+from retejo._internal.type_tools.basic_utils import is_subclass_soft
+from retejo.core.entities import AnyResult, RequestContextProxy, SequenceResult
 from retejo.core.factory import AdaptixFactory, Factory
 from retejo.http.entities import HttpMethod, HttpRequest, HttpResponse, ResponseLoadData
 from retejo.http.logger_state import HttpLoggerState
@@ -66,7 +67,7 @@ class BaseHttpClient:
         if method_result in _NONE_TYPES:
             return cast("_MethodResultT", None)
 
-        if method_result is Any:
+        if is_subclass_soft(method_result, AnyResult):
             return cast("_MethodResultT", response.data)
 
         response_load_data = self._make_response_load_data(response)

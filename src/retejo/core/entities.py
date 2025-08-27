@@ -2,11 +2,7 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any, ClassVar, Final, Generic, TypeVar
 
-from typing_extensions import (
-    Generic as GenericExtensions,
-    TypeVar as TypeVarExtensions,
-    dataclass_transform,
-)
+from typing_extensions import dataclass_transform
 
 from retejo._internal.type_tools.get_generic_param import get_generic_param
 from retejo.core.markers import BaseMarker
@@ -55,7 +51,12 @@ class SequenceResult(Generic[_SequenceResultT]):
     result: Sequence[_SequenceResultT]
 
 
-class _AnyResult: ...
+class AnyResult:
+    """
+    Any result.
+
+    Use if get raw data.
+    """
 
 
 @dataclass_transform(frozen_default=True, kw_only_default=True)
@@ -90,8 +91,8 @@ class MethodMetaClass(type):
         return class_
 
 
-_MethodResultT = TypeVarExtensions("_MethodResultT", default=_AnyResult)
+_MethodResultT = TypeVar("_MethodResultT")
 
 
-class Method(GenericExtensions[_MethodResultT], metaclass=MethodMetaClass):
+class Method(Generic[_MethodResultT], metaclass=MethodMetaClass):
     __result__: ClassVar[type[_MethodResultT]]  # type: ignore[misc]

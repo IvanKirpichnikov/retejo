@@ -19,7 +19,7 @@ from retejo.core.markers import (
     Omittable,
     Omitted,
 )
-from retejo.core.method_binder import bind_method
+from retejo.core.method_binder import MethodBinder, bind_method
 from retejo.core.method_provider import method_provider
 
 __all__ = (
@@ -30,6 +30,7 @@ __all__ = (
     "IntegrationError",
     "LoggerProto",
     "Method",
+    "MethodBinder",
     "MethodMetaClass",
     "Omittable",
     "Omitted",

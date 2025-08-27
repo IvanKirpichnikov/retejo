@@ -9,7 +9,7 @@ _MethodResultT = TypeVar("_MethodResultT")
 _MethodParamSpec = ParamSpec("_MethodParamSpec")
 
 
-class _BindMethod(Generic[_MethodParamSpec, _MethodResultT]):
+class MethodBinder(Generic[_MethodParamSpec, _MethodResultT]):
     __slots__ = ("_method_tp",)
 
     def __init__(
@@ -74,20 +74,20 @@ class _BindMethod(Generic[_MethodParamSpec, _MethodResultT]):
 @overload
 def bind_method(
     method_tp: Callable[_MethodParamSpec, Method[AnyResult]],
-) -> _BindMethod[_MethodParamSpec, Any]: ...
+) -> MethodBinder[_MethodParamSpec, Any]: ...
 
 
 @overload
 def bind_method(
     method_tp: Callable[_MethodParamSpec, Method[SequenceResult[_MethodResultT]]],
-) -> _BindMethod[_MethodParamSpec, Sequence[_MethodResultT]]: ...
+) -> MethodBinder[_MethodParamSpec, Sequence[_MethodResultT]]: ...
 
 
 @overload
 def bind_method(
     method_tp: Callable[_MethodParamSpec, Method[_MethodResultT]],
-) -> _BindMethod[_MethodParamSpec, _MethodResultT]: ...
+) -> MethodBinder[_MethodParamSpec, _MethodResultT]: ...
 
 
 def bind_method(method_tp: Any) -> Any:
-    return _BindMethod(method_tp)
+    return MethodBinder(method_tp)

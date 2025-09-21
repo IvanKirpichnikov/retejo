@@ -1,0 +1,36 @@
+Collecting pytest
+  Using cached pytest-8.4.2-py3-none-any.whl.metadata (7.7 kB)
+Collecting pytest-cov
+  Using cached pytest_cov-7.0.0-py3-none-any.whl.metadata (31 kB)
+Collecting mypy
+  Using cached mypy-1.18.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.2 kB)
+Collecting ruff
+  Using cached ruff-0.13.1-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (25 kB)
+Collecting iniconfig>=1 (from pytest)
+  Using cached iniconfig-2.1.0-py3-none-any.whl.metadata (2.7 kB)
+Collecting packaging>=20 (from pytest)
+  Using cached packaging-25.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting pluggy<2,>=1.5 (from pytest)
+  Using cached pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+Collecting pygments>=2.7.2 (from pytest)
+  Using cached pygments-2.19.2-py3-none-any.whl.metadata (2.5 kB)
+Collecting coverage>=7.10.6 (from coverage[toml]>=7.10.6->pytest-cov)
+  Using cached coverage-7.10.6-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (8.9 kB)
+Requirement already satisfied: typing_extensions>=4.6.0 in ./venv/lib/python3.12/site-packages (from mypy) (4.15.0)
+Collecting mypy_extensions>=1.0.0 (from mypy)
+  Using cached mypy_extensions-1.1.0-py3-none-any.whl.metadata (1.1 kB)
+Collecting pathspec>=0.9.0 (from mypy)
+  Using cached pathspec-0.12.1-py3-none-any.whl.metadata (21 kB)
+Using cached pytest-8.4.2-py3-none-any.whl (365 kB)
+Using cached pytest_cov-7.0.0-py3-none-any.whl (22 kB)
+Using cached mypy-1.18.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (13.3 MB)
+Using cached ruff-0.13.1-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (13.2 MB)
+Using cached coverage-7.10.6-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (251 kB)
+Using cached iniconfig-2.1.0-py3-none-any.whl (6.0 kB)
+Using cached mypy_extensions-1.1.0-py3-none-any.whl (5.0 kB)
+Using cached packaging-25.0-py3-none-any.whl (66 kB)
+Using cached pathspec-0.12.1-py3-none-any.whl (31 kB)
+Using cached pluggy-1.6.0-py3-none-any.whl (20 kB)
+Using cached pygments-2.19.2-py3-none-any.whl (1.2 MB)
+Installing collected packages: ruff, pygments, pluggy, pathspec, packaging, mypy_extensions, iniconfig, coverage, pytest, mypy, pytest-cov
+Successfully installed coverage-7.10.6 iniconfig-2.1.0 mypy-1.18.2 mypy_extensions-1.1.0 packaging-25.0 pathspec-0.12.1 pluggy-1.6.0 pygments-2.19.2 pytest-8.4.2 pytest-cov-7.0.0 ruff-0.13.1

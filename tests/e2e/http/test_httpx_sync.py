@@ -62,4 +62,8 @@ def test_upload_image() -> None:
     with SyncClient() as client:
         image = client.upload_image(file=FileObj("test"))
         # httpx sends file data in the files field, not form field
-        assert image["files"]["file"] == "test" or image["form"]["file"] == "test"
+        # Check if either files or form contains the uploaded data
+        assert (
+            image.get("files", {}).get("file") == "test"
+            or image.get("form", {}).get("file") == "test"
+        )

@@ -41,9 +41,10 @@ classifiers = [
 [project.optional-dependencies]
 requests = [ "requests>=2.27.0" ]
 aiohttp = [ "aiohttp>=3.10.0" ]
+httpx = [ "httpx>=0.24.0" ]
 
 [dependency-groups]
-integrations = [ "retejo[aiohttp, requests]" ]
+integrations = [ "retejo[aiohttp, requests, httpx]" ]
 
 types = [ "types-requests" ]
 

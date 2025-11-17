@@ -3,8 +3,9 @@ from typing import Any
 import pytest
 from adaptix import P, Retort, dumper, name_mapping
 
-from retejo.core.markers import Omittable, Omitted
-from retejo.core.method_provider import method_provider
+from retejo.core.adaptix.for_marker import for_marker
+from retejo.core.adaptix.method_provider import method_provider
+from retejo.core.entities.base_marker import Omittable, Omitted
 from retejo.http.entities import HttpMethod
 from retejo.http.markers import (
     Body,
@@ -18,7 +19,6 @@ from retejo.http.markers import (
     UrlVar,
     UrlVarMarker,
 )
-from retejo.marker_tools.for_marker import for_marker
 
 retort = Retort(
     recipe=[

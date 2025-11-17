@@ -87,7 +87,7 @@ dev = [
 [tool.mypy]
 files = ["src", "tests", "examples"]
 exclude = [
-    "src/retejo/_internal/type_tools/",
+    "src/retejo/_internal/adaptix/type_tools/",
 ]
 enable_error_code = [
   "truthy-bool",
@@ -116,7 +116,7 @@ include = [
     "pyproject.toml",
     "examples/**.py",
 ]
-exclude = ["src/retejo/_internal/type_tools/*"]
+exclude = ["src/retejo/_internal/adaptix/type_tools/*"]
 line-length = 100
 target-version = "py310"
 
@@ -199,7 +199,7 @@ parallel = true
 branch = true
 concurrency = ["multiprocessing", "thread"]
 source = ["tests"]
-omit = ["src/retejo/_internal/type_tools/**"]
+omit = ["src/retejo/_internal/adaptix/type_tools/**"]
 
 [tool.coverage.report]
 show_missing = true
@@ -223,9 +223,9 @@ exclude_also = [
 strict-imports = true
 exclude-modules = '''
 (
-  (^|\.)type_tools  # ignore retejo._internal.type_tools
+  (^|\.)type_tools  # ignore retejo._internal.adaptix.type_tools
 )
 '''
 
 [tool.bandit]
-exclude_dirs = ["src/retejo/_internal/type_tools"]
+exclude_dirs = ["src/retejo/_internal/adaptix/type_tools"]

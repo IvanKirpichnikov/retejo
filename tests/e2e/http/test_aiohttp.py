@@ -3,7 +3,7 @@ from typing_extensions import override
 
 from retejo.core import AdaptixFactory, Factory, bind_method
 from retejo.http import FileObj, http_response_loader_provider
-from retejo.http.clients.aiohttp import AiohttpClient
+from retejo.http.integrations.aiohttp import AiohttpClient
 from tests.e2e.http.conftest import CreatePost, DeletePost, GetPost, ListPosts, PostId, UploadImage
 
 

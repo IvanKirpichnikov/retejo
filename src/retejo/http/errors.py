@@ -1,6 +1,6 @@
 from typing_extensions import override
 
-from retejo.core.errors import RetejoError
+from retejo.error import RetejoError
 
 
 class MalformedResponseError(RetejoError):
@@ -18,9 +18,17 @@ class ClientError(RetejoError):
         super().__init__(status_code)
         self._status_code = status_code
 
+    @property
+    def status_code(self) -> int:
+        return self._status_code
+
     @override
     def __str__(self) -> str:
         return f"Client error with {self._status_code!r} error code"
+
+    @override
+    def __repr__(self) -> str:
+        return f"<{self.__class__.__name__}({self._status_code})>"
 
 
 class ServerError(RetejoError):
@@ -30,6 +38,14 @@ class ServerError(RetejoError):
         super().__init__(status_code)
         self._status_code = status_code
 
+    @property
+    def status_code(self) -> int:
+        return self._status_code
+
     @override
     def __str__(self) -> str:
         return f"Server error with {self._status_code!r} error code"
+
+    @override
+    def __repr__(self) -> str:
+        return f"<{self.__class__.__name__}({self._status_code})>"

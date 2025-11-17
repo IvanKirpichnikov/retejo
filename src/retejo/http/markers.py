@@ -1,49 +1,40 @@
 from typing import Annotated, TypeAlias, TypeVar
 
-from typing_extensions import override
-
-from retejo.core.markers import BaseMarker
+from retejo.entities.marker import Marker
 
 
-class BaseHttpMarker(BaseMarker):
+class BodyMarker(Marker):
     __slots__ = ()
 
-    @override
-    def __repr__(self) -> str:
-        return f"<Http marker {self.name!r}>"
+    marker_name = "Body"
 
 
-class BodyMarker(BaseHttpMarker):
+class FormMarker(Marker):
     __slots__ = ()
 
-    name = "Body"
+    marker_name = "Form"
 
 
-class FormMarker(BaseHttpMarker):
+class HeaderMarker(Marker):
     __slots__ = ()
 
-    name = "Form"
+    marker_name = "Header"
 
 
-class HeaderMarker(BaseHttpMarker):
+class QueryParamMarker(Marker):
     __slots__ = ()
 
-    name = "Header"
+    marker_name = "QueryParam"
 
 
-class QueryParamMarker(BaseHttpMarker):
+class UrlVarMarker(Marker):
     __slots__ = ()
 
-    name = "QueryParam"
-
-
-class UrlVarMarker(BaseHttpMarker):
-    __slots__ = ()
-
-    name = "UrlVar"
+    marker_name = "UrlVar"
 
 
 _MarkerValueT = TypeVar("_MarkerValueT")
+
 
 Body: TypeAlias = Annotated[_MarkerValueT, BodyMarker()]
 Form: TypeAlias = Annotated[_MarkerValueT, FormMarker()]

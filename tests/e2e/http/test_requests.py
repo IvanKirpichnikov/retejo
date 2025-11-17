@@ -1,11 +1,11 @@
 from adaptix import NameStyle, Retort, name_mapping
 from typing_extensions import override
 
-from retejo.core.factory import AdaptixFactory, Factory
-from retejo.core.method_binder import bind_method
-from retejo.http.clients.requests import RequestsClient
+from retejo.core.interfaces.factory import AdaptixFactory, Factory
+from retejo.http.adaptix.providers import http_response_loader_provider
 from retejo.http.entities import FileObj
-from retejo.http.providers import http_response_loader_provider
+from retejo.http.integrations.requests import RequestsClient
+from retejo.method_binder import bind_method
 from tests.e2e.http.conftest import CreatePost, DeletePost, GetPost, ListPosts, PostId, UploadImage
 
 

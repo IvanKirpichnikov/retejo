@@ -2,7 +2,7 @@ from typing import Annotated, Any
 
 import pytest
 
-from retejo.core.markers import Omittable
+from retejo.core.entities.base_marker import Omittable
 from retejo.http.markers import Body, BodyMarker, Form, FormMarker, UrlVar, UrlVarMarker
 from retejo.marker_tools import get_marker
 
